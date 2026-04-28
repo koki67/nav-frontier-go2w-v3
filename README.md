@@ -70,6 +70,51 @@ ros2 launch nav_frontier_go2w_bringup bringup.launch.py \
 
 Start with `bridge_dry_run:=true` and conservative velocity caps. Once you have validated `/cmd_vel`, `/frontier_goal`, and `/map` in RViz, set `bridge_dry_run:=false` to enable motion.
 
+## Verify dry-run bringup
+
+Keep the launch terminal running. In a second terminal, enter the same running
+container:
+
+```bash
+bash scripts/enter.sh
+source /workspace/humble_ws/install/setup.bash
+```
+
+Confirm that the velocity bridge is in dry-run mode:
+
+```bash
+ros2 param get /velocity_bridge dry_run
+```
+
+Expected output:
+
+```text
+Boolean value is: True
+```
+
+Then check that each upstream stage is publishing:
+
+```bash
+ros2 topic hz /points_raw
+ros2 topic hz /go2w/imu
+ros2 topic hz /scan
+ros2 topic echo --once /map
+ros2 topic echo /frontier_goal
+ros2 topic hz /cmd_vel
+```
+
+The dry-run safety check is that no real Sport API request is emitted:
+
+```bash
+timeout 5 ros2 topic echo --once /api/sport/request
+```
+
+Expected result: no message is printed before the timeout. A good dry-run test
+has `/map`, `/frontier_goal`, and `/cmd_vel` active, `dry_run=True`, no
+`/api/sport/request` output, and no robot motion. If `/frontier_goal` or
+`/cmd_vel` never appears, debug upstream topics first: `/points_raw`,
+`/go2w/imu`, `/scan`, `/map`, and TF `map -> base_link`.
+
 ## Safety notes
 
 The velocity bridge enforces hard caps `(vx_max, vy_max, wz_max)` on every Twist before encoding it as a Sport API request. A 0.5 s `/cmd_vel` watchdog automatically emits a `StopMove` (`api_id=1003`) if the upstream stack stops publishing. Always keep the e-stop within reach for live tests.
