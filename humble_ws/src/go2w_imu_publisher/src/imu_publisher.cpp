@@ -13,6 +13,7 @@ public:
         rclcpp::QoS qos = rclcpp::SensorDataQoS();
         state_sub_ = this->create_subscription<unitree_go::msg::LowState>(
             "lowstate", qos, std::bind(&ImuPublisher::stateCallback, this, std::placeholders::_1));
+        RCLCPP_INFO(this->get_logger(), "Republishing /lowstate IMU on /go2w/imu");
     }
 
 private:
@@ -35,8 +36,6 @@ private:
         imu_msg.linear_acceleration.z = data->imu_state.accelerometer[2];
 
         imu_pub_->publish(imu_msg);
-
-        RCLCPP_INFO(this->get_logger(), "Republished lowstate IMU on /go2w/imu");
     }
 
     rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imu_pub_;

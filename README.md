@@ -135,9 +135,10 @@ timeout 5 ros2 topic echo --once /api/sport/request
 
 Expected result: no message is printed before the timeout. A good dry-run test
 has `/map`, `/frontier_goal`, and `/cmd_vel` active, `dry_run=True`, no
-`/api/sport/request` output, and no robot motion. If `/frontier_goal` or
-`/cmd_vel` never appears, debug upstream topics first: `/points_raw`,
-`/go2w/imu`, `/scan`, `/map`, and TF `map -> base_link`.
+`/api/sport/request` output, and no robot motion. `bridge_dry_run:=true` does
+not suppress `/cmd_vel`; it only prevents forwarding `/cmd_vel` to
+`/api/sport/request`. If `/frontier_goal` appears but `/cmd_vel` never appears,
+debug Nav2/executor state before enabling motion.
 
 ## Safety notes
 

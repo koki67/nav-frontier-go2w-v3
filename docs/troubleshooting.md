@@ -5,11 +5,11 @@ Common bring-up issues and how to diagnose them.
 ## "robot stands but doesn't move" decision tree
 
 1. Is `/cmd_vel` publishing? `ros2 topic hz /cmd_vel`
-   - **No:** Nav2 isn't producing commands. Skip to step 2.
+   - **No:** Nav2 isn't producing commands. Check `ros2 topic hz /cmd_vel_nav`; if that is active, the velocity smoother is the issue. If both are silent, skip to step 2.
    - **Yes, but values are zero:** MPPI thinks it's at the goal or the goal_checker is satisfied. Check `ros2 topic echo /frontier_goal` — is a goal even being requested?
 2. Is `/frontier_goal` publishing? `ros2 topic echo /frontier_goal --once`
    - **No:** the frontier selector has no map or no robot pose. `ros2 topic echo /map --once` to verify slam_toolbox is producing one. `ros2 run tf2_ros tf2_echo map base_link` to verify the TF chain.
-   - **Yes:** the executor isn't dispatching it. Check the executor logs for `Sent goal to Nav2` vs `TF unavailable` vs `Nav2 not active`.
+   - **Yes:** the executor isn't dispatching it, Nav2 is inactive, or the controller is failing. Check the executor logs for `Sent goal to Nav2` vs `TF unavailable` vs `Nav2 not active`, then check lifecycle state with `ros2 lifecycle get /controller_server`, `/planner_server`, `/bt_navigator`, and `/velocity_smoother`.
 3. Is the velocity bridge publishing `/api/sport/request`? `ros2 topic hz /api/sport/request`
    - **No:** the bridge node didn't start. `ros2 node list | grep velocity_bridge`.
    - **Yes but nothing happens:** check `dry_run` — if `true`, requests are logged only.
