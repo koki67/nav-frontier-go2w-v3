@@ -1,0 +1,11 @@
+velocity_bridge:
+  ros__parameters:
+    vx_max: 0.30
+    vy_max: 0.20
+    wz_max: 0.50
+    watchdog_timeout: 0.5
+    publish_rate: 50.0
+    dry_run: false
+    emit_stop_on_idle: true
+    api_id_move: 1008
+    api_id_stop: 1003
