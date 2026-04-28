@@ -121,21 +121,23 @@ class VelocityBridgeNode(Node):
         req.parameter = parameter
         self._req_pub.publish(req)
 
-    def _publish_stop(self, reason: str) -> None:
+    def _publish_stop(self, reason: str, *, log: bool = True) -> None:
         if self._dry_run:
-            self.get_logger().info("[DRY_RUN] StopMove (%s)" % reason)
+            if log:
+                self.get_logger().info("[DRY_RUN] StopMove (%s)" % reason)
             return
         req = Request()
         req.header.identity.api_id = self._api_id_stop
         req.parameter = ""
         self._req_pub.publish(req)
-        self.get_logger().info("StopMove emitted (%s)" % reason)
+        if log:
+            self.get_logger().info("StopMove emitted (%s)" % reason)
 
     def shutdown_stop(self) -> None:
         """Best-effort StopMove on shutdown so the robot doesn't run away."""
         try:
-            self._publish_stop("shutdown")
-        except Exception:  # pragma: no cover — defensive
+            self._publish_stop("shutdown", log=False)
+        except Exception:  # pragma: no cover - defensive shutdown path
             pass
 
 
@@ -147,10 +149,16 @@ def main(args=None) -> None:
     except KeyboardInterrupt:
         pass
     finally:
-        node.shutdown_stop()
-        node.destroy_node()
+        try:
+            node.shutdown_stop()
+            node.destroy_node()
+        except KeyboardInterrupt:
+            pass
         if rclpy.ok():
-            rclpy.shutdown()
+            try:
+                rclpy.shutdown()
+            except KeyboardInterrupt:
+                pass
 
 
 if __name__ == "__main__":

@@ -45,6 +45,16 @@ def test_nav2_topics_match_dlio_and_hesai_scan_pipeline():
     assert global_costmap["track_unknown_space"] is True
 
 
+def test_humble_costmap_dimension_parameter_types():
+    config = _load_yaml(PLANNER_ROOT / "config" / "nav2_params.yaml")
+    local_costmap = config["local_costmap"]["local_costmap"]["ros__parameters"]
+
+    assert local_costmap["width"] == 6
+    assert local_costmap["height"] == 6
+    assert isinstance(local_costmap["width"], int)
+    assert isinstance(local_costmap["height"], int)
+
+
 def test_nav2_velocity_caps_match_bridge_defaults():
     nav2 = _load_yaml(PLANNER_ROOT / "config" / "nav2_params.yaml")
     bridge = _load_yaml(BRIDGE_ROOT / "config" / "velocity_bridge.yaml")
