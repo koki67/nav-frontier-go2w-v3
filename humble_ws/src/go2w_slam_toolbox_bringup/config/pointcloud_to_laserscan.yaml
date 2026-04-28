@@ -1,0 +1,36 @@
+# Parameters for pointcloud_to_laserscan_node.
+# Projects the Hesai PandarXT-16 3D PointCloud2 into a 2D LaserScan suitable for
+# slam_toolbox. The cloud is first transformed into target_frame (base_link) and
+# then sliced between [min_height, max_height].
+#
+# IMPORTANT: min_height/max_height are expressed in the TARGET frame (base_link),
+# not the LiDAR frame. They are the most likely tuning knob — if /scan is empty
+# or full of body / floor noise, adjust these first.
+pointcloud_to_laserscan:
+  ros__parameters:
+    target_frame: base_link
+    transform_tolerance: 0.05
+
+    # Vertical slice in base_link frame. Conservative defaults that exclude the
+    # robot body and the floor; tune to your LiDAR mount height on the Go2W.
+    min_height: -0.10
+    max_height: 0.40
+
+    # Full 360 deg horizontal scan, ~0.5 deg resolution.
+    angle_min: -3.14159
+    angle_max:  3.14159
+    angle_increment: 0.0087
+
+    # Hesai XT-16 default rotation rate is 10 Hz.
+    scan_time: 0.1
+
+    # XT-16 spec range is ~0.05–80 m; cap well under that for SLAM stability.
+    range_min: 0.30
+    range_max: 30.0
+
+    # Treat no-return as +inf rather than dropping the bin (better for free-space
+    # raycasting in slam_toolbox).
+    use_inf: true
+    inf_epsilon: 1.0
+
+    concurrency_level: 1

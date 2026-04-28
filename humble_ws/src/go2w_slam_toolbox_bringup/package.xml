@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>go2w_slam_toolbox_bringup</name>
+  <version>0.1.0</version>
+  <description>
+    Bringup package for 2D SLAM on the Unitree Go2W using slam_toolbox.
+    Projects the Hesai PandarXT-16 PointCloud2 (/points_raw) into a 2D LaserScan
+    (/scan) and feeds it to slam_toolbox to produce a /map occupancy grid.
+    Assumes the slam-go2w D-LIO bringup is providing odom -> base_link and
+    base_link -> hesai_lidar TFs.
+  </description>
+
+  <maintainer email="67k.tanaka@gmail.com">koki67</maintainer>
+  <license>MIT</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <exec_depend>pointcloud_to_laserscan</exec_depend>
+  <exec_depend>slam_toolbox</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>
