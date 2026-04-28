@@ -1,9 +1,9 @@
-# nav-frontier-go2w-v2 — single docker image for the Go2W frontier exploration stack.
+# nav-frontier-go2w-v3 — single docker image for the Go2W frontier exploration stack.
 #
 # Builds the full ROS 2 humble workspace into the image so the container is
 # launch-ready: `docker run ... ros2 launch nav_frontier_go2w_bringup bringup.launch.py`.
 
-FROM arm64v8/ubuntu:jammy
+FROM ubuntu:jammy
 
 SHELL ["/bin/bash", "-c"]
 ENV DEBIAN_FRONTEND=noninteractive

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Launch the nav-frontier-go2w-v2 container with X11, CycloneDDS, host networking,
+# Launch the nav-frontier-go2w-v3 container with X11, CycloneDDS, host networking,
 # and the host repository bind-mounted at /external for live config edits.
 #
 # Usage:
@@ -10,7 +10,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-IMAGE="${NAV_FRONTIER_IMAGE:-nav-frontier-go2w-v2:latest}"
+IMAGE="${NAV_FRONTIER_IMAGE:-nav-frontier-go2w-v3:latest}"
 
 # Allow local X11 connections (best-effort; not fatal in headless environments).
 xhost +local:docker 2>/dev/null || true
@@ -50,6 +50,6 @@ exec docker run -it --rm \
     --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
     --volume="$XAUTH:$XAUTH" \
     --volume="$REPO_ROOT:/external:rw" \
-    --name="${NAV_FRONTIER_CONTAINER_NAME:-nav-frontier-go2w-v2}" \
+    --name="${NAV_FRONTIER_CONTAINER_NAME:-nav-frontier-go2w-v3}" \
     "$IMAGE" \
     "${CMD[@]}"

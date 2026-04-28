@@ -1,4 +1,4 @@
-# nav-frontier-go2w-v2
+# nav-frontier-go2w-v3
 
 Autonomous **frontier exploration** navigation framework for the Unitree **Go2W** quadruped, packaged as a single ROS 2 Humble docker image.
 
@@ -25,7 +25,7 @@ IMU /go2w/imu ───────────┘                              
 ## Repo layout
 
 ```
-nav-frontier-go2w-v2/
+nav-frontier-go2w-v3/
 ├── docker/             # Single-image build: Dockerfile, entrypoint.sh, run.sh
 ├── humble_ws/src/      # ROS 2 packages (vendored deps + 4 in-repo packages)
 ├── config/             # cyclonedds.xml, nav2_params.yaml, slam_toolbox_params.yaml, ...
@@ -44,7 +44,7 @@ nav-frontier-go2w-v2/
 | `unitree_api`, `unitree_go`        | Vendored (msg-only) | Sport API request/response types |
 | `go2w_slam_toolbox_bringup`        | Vendored         | pointcloud_to_laserscan + slam_toolbox launch |
 | `nav_frontier_go2w_bridge`         | This repo        | Twist → Sport API bridge (50 Hz, watchdog, dry-run) |
-| `nav_frontier_go2w_frontier`       | This repo        | BFS frontier detection + selector node |
+| `nav_frontier_go2w_frontier`       | This repo        | BFS frontier detection + selector node with expanded-neighbourhood info gain |
 | `nav_frontier_go2w_planner`        | This repo        | Nav2 wrapper (NavFn + MPPI) + frontier goal executor |
 | `nav_frontier_go2w_bringup`        | This repo        | Top-level `bringup.launch.py` |
 
@@ -53,6 +53,10 @@ nav-frontier-go2w-v2/
 ```bash
 # Build the single docker image (arm64 robot target):
 bash scripts/build_image.sh
+
+# Optional amd64 Dockerfile smoke build on an x86 host:
+NAV_FRONTIER_PLATFORM=linux/amd64 NAV_FRONTIER_IMAGE=nav-frontier-go2w-v3:amd64-smoke \
+    bash scripts/build_image.sh
 
 # Enter the running container with X11 / CycloneDDS forwarded:
 bash docker/run.sh

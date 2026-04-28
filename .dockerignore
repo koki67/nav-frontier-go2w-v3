@@ -1,0 +1,14 @@
+.git/
+.pytest_cache/
+**/__pycache__/
+**/*.pyc
+
+humble_ws/build/
+humble_ws/install/
+humble_ws/log/
+humble_ws/bags/
+output/
+
+.vscode/
+.idea/
+*.xauth

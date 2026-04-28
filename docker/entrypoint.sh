@@ -1,5 +1,5 @@
 #!/bin/bash
-# Entry script for the nav-frontier-go2w-v2 docker image.
+# Entry script for the nav-frontier-go2w-v3 docker image.
 # Sources ROS 2 Humble + the in-image workspace overlay, then execs the user command.
 set -e
 

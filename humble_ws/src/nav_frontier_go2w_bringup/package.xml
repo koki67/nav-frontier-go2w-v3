@@ -4,7 +4,7 @@
   <name>nav_frontier_go2w_bringup</name>
   <version>0.1.0</version>
   <description>
-    Top-level launch composing the full nav-frontier-go2w-v2 stack:
+    Top-level launch composing the full nav-frontier-go2w-v3 stack:
     Hesai LiDAR + IMU publisher + D-LIO + pointcloud_to_laserscan +
     slam_toolbox + frontier selector + Nav2 (NavFn + MPPI) + velocity
     bridge, plus the static TFs for the Go2W sensor mounting.
