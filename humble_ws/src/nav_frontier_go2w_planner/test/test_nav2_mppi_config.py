@@ -19,14 +19,23 @@ def _load_yaml(path: Path) -> dict:
 def test_nav2_uses_navfn_and_mppi_omni():
     config = _load_yaml(PLANNER_ROOT / "config" / "nav2_params.yaml")
 
+    navigator = config["bt_navigator"]["ros__parameters"]["navigate_to_pose"]
     planner = config["planner_server"]["ros__parameters"]["GridBased"]
     controller = config["controller_server"]["ros__parameters"]["FollowPath"]
+    smoother = config["smoother_server"]["ros__parameters"]["simple_smoother"]
+    behaviors = config["behavior_server"]["ros__parameters"]
 
-    assert planner["plugin"] == "nav2_navfn_planner::NavfnPlanner"
+    assert navigator["plugin"] == "nav2_bt_navigator/NavigateToPoseNavigator"
+    assert planner["plugin"] == "nav2_navfn_planner/NavfnPlanner"
     assert planner["allow_unknown"] is True
     assert controller["plugin"] == "nav2_mppi_controller::MPPIController"
     assert controller["motion_model"] == "Omni"
     assert "VelocityDeadbandCritic" in controller["critics"]
+    assert smoother["plugin"] == "nav2_smoother::SimpleSmoother"
+    assert behaviors["spin"]["plugin"] == "nav2_behaviors/Spin"
+    assert behaviors["backup"]["plugin"] == "nav2_behaviors/BackUp"
+    assert behaviors["drive_on_heading"]["plugin"] == "nav2_behaviors/DriveOnHeading"
+    assert behaviors["wait"]["plugin"] == "nav2_behaviors/Wait"
 
 
 def test_nav2_topics_match_dlio_and_hesai_scan_pipeline():
@@ -53,6 +62,27 @@ def test_humble_costmap_dimension_parameter_types():
     assert local_costmap["height"] == 6
     assert isinstance(local_costmap["width"], int)
     assert isinstance(local_costmap["height"], int)
+
+
+def test_mppi_model_dt_matches_controller_period():
+    config = _load_yaml(PLANNER_ROOT / "config" / "nav2_params.yaml")
+    controller_server = config["controller_server"]["ros__parameters"]
+    controller = controller_server["FollowPath"]
+
+    controller_period = 1.0 / controller_server["controller_frequency"]
+    assert controller["model_dt"] + 1.0e-9 >= controller_period
+
+
+def test_mppi_cost_critic_matches_circular_costmap_model():
+    config = _load_yaml(PLANNER_ROOT / "config" / "nav2_params.yaml")
+    controller = config["controller_server"]["ros__parameters"]["FollowPath"]
+    local_costmap = config["local_costmap"]["local_costmap"]["ros__parameters"]
+    global_costmap = config["global_costmap"]["global_costmap"]["ros__parameters"]
+
+    assert "robot_radius" in local_costmap
+    assert "robot_radius" in global_costmap
+    assert "footprint" not in local_costmap
+    assert controller["CostCritic"]["consider_footprint"] is False
 
 
 def test_nav2_velocity_caps_match_bridge_defaults():
