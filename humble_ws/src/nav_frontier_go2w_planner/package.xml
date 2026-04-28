@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>nav_frontier_go2w_planner</name>
+  <version>0.1.0</version>
+  <description>
+    Nav2 wrapper + frontier goal executor for the Go2W. Bundles the Nav2
+    parameter set (NavFn global planner + nav2_mppi_controller local
+    controller, configured for the Go2W footprint and velocity caps) and
+    a frontier_goal_executor node that consumes /frontier_goal and dispatches
+    NavigateToPose actions.
+  </description>
+
+  <maintainer email="67k.tanaka@gmail.com">Koki Tanaka</maintainer>
+  <license>MIT</license>
+
+  <depend>rclpy</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>nav2_msgs</depend>
+  <depend>nav2_simple_commander</depend>
+  <depend>tf2_ros</depend>
+  <depend>lifecycle_msgs</depend>
+
+  <exec_depend>nav2_bringup</exec_depend>
+  <exec_depend>nav2_navfn_planner</exec_depend>
+  <exec_depend>nav2_mppi_controller</exec_depend>
+  <exec_depend>nav2_lifecycle_manager</exec_depend>
+  <exec_depend>nav2_velocity_smoother</exec_depend>
+  <exec_depend>nav2_bt_navigator</exec_depend>
+  <exec_depend>nav2_smoother</exec_depend>
+  <exec_depend>nav2_behaviors</exec_depend>
+
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>

@@ -1,0 +1,9 @@
+frontier_goal_executor:
+  ros__parameters:
+    frontier_goal_topic: /frontier_goal
+    global_frame: map
+    robot_base_frame: base_link
+    min_goal_update_distance: 0.5
+    goal_timeout_sec: 180.0
+    result_check_rate: 2.0
+    tf_timeout: 0.2
