@@ -1,0 +1,29 @@
+# Colcon build artifacts
+humble_ws/build/
+humble_ws/install/
+humble_ws/log/
+
+# Recorded data
+humble_ws/bags/
+output/
+
+# Editor / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Docker
+*.xauth
+
+# Claude local state
+.claude/settings.local.json
+.claude/.cache/
