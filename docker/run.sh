@@ -45,8 +45,8 @@ exec docker run -it --rm \
     --env="QT_X11_NO_MITSHM=1" \
     --env="XAUTHORITY=$XAUTH" \
     --env="RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" \
-    --env="CYCLONEDDS_URI=file:///etc/cyclonedds.xml" \
-    --env="ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-42}" \
+    --env="CYCLONEDDS_URI=${CYCLONEDDS_URI:-file:///etc/cyclonedds.xml}" \
+    --env="ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}" \
     --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
     --volume="$XAUTH:$XAUTH" \
     --volume="$REPO_ROOT:/external:rw" \

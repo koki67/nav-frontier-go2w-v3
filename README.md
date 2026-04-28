@@ -58,7 +58,9 @@ bash scripts/build_image.sh
 NAV_FRONTIER_PLATFORM=linux/amd64 NAV_FRONTIER_IMAGE=nav-frontier-go2w-v3:amd64-smoke \
     bash scripts/build_image.sh
 
-# Enter the running container with X11 / CycloneDDS forwarded:
+# Enter the running container with X11 / CycloneDDS forwarded.
+# docker/run.sh mirrors the host ROS_DOMAIN_ID; if unset it defaults to 0,
+# which matches the stock Unitree onboard ROS graph.
 bash docker/run.sh
 
 # Inside the container — the workspace is built at image time. Launch the full stack:
@@ -95,6 +97,7 @@ Boolean value is: True
 Then check that each upstream stage is publishing:
 
 ```bash
+echo "ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}"
 ros2 topic hz /points_raw
 ros2 topic hz /lowstate
 ros2 topic hz /go2w/imu
@@ -108,6 +111,12 @@ ros2 topic hz /cmd_vel
 `/points_raw` and `/scan` are alive but `/go2w/imu` is silent, first fix the
 Unitree low-state/DDS side (`/lowstate`) before debugging D-LIO, `/map`,
 `/frontier_goal`, or `/cmd_vel`.
+
+If the host can see Unitree topics but the container only sees `/rosout` and
+`/parameter_events`, the container is isolated from the robot DDS graph. Confirm
+that `echo "${ROS_DOMAIN_ID:-0}"` prints the same value on the host and inside
+the container, then restart the container with that value exported before
+`bash docker/run.sh`.
 
 The launch terminal should also show the in-repo nodes starting cleanly:
 

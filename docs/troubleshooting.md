@@ -27,9 +27,42 @@ Common bring-up issues and how to diagnose them.
 - Check the IMU calibration period (D-LIO needs a still period at startup to estimate biases). If you start moving immediately, expect drift.
 - Verify `extrinsics/baselink2lidar` and `extrinsics/baselink2imu` in `direct_lidar_inertial_odometry/cfg/dlio.yaml` match the static TFs in the bringup. They should describe the same transform but expressed differently (matrix vs quaternion).
 
-## CycloneDDS / robot can't see desktop topics
+## Docker container can't see robot topics
 
-`/etc/cyclonedds.xml` (baked into the image) defaults to `eth0`. On a desktop the interface is usually `wlan0`. Override with `CYCLONEDDS_NETWORK_INTERFACE=wlan0` before launching the container, or edit `config/cyclonedds.xml` and rebuild the image.
+If `ros2 topic list` on the robot host shows `/lowstate`, `/api/sport/request`,
+and other Unitree topics, but the same command inside the container only shows
+`/rosout` and `/parameter_events`, the container is on a different DDS graph.
+Check the ROS domain first:
+
+```bash
+# On the robot host:
+echo "${ROS_DOMAIN_ID:-0}"
+
+# Inside the container:
+echo "${ROS_DOMAIN_ID:-0}"
+```
+
+Both values must match. `docker/run.sh` forwards the host `ROS_DOMAIN_ID` and
+defaults to `0`, which is the stock Unitree onboard domain. If the robot host
+uses a custom value, export it before starting the container:
+
+```bash
+export ROS_DOMAIN_ID=<robot-domain-id>
+bash docker/run.sh
+```
+
+After entering the container, verify discovery before launching the stack:
+
+```bash
+ros2 topic list | grep -E '^/lowstate$|^/api/sport/request$'
+```
+
+## CycloneDDS interface selection
+
+`/etc/cyclonedds.xml` (baked into the image) defaults to `eth0`. On the Go2W
+onboard computer this is usually correct. On a desktop the interface is often
+`wlan0` or `en*`; edit `config/cyclonedds.xml` and rebuild the image, or start
+the container with `CYCLONEDDS_URI` pointing at a custom CycloneDDS profile.
 
 ## MPPI plan thrashes / robot oscillates
 

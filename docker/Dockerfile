@@ -88,7 +88,7 @@ RUN source /opt/ros/humble/setup.bash && \
     echo "source /opt/ros/humble/setup.bash" >> /etc/bash.bashrc && \
     echo "source /workspace/humble_ws/install/setup.bash" >> /etc/bash.bashrc
 
-ENV ROS_DOMAIN_ID=42
+ENV ROS_DOMAIN_ID=0
 
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
