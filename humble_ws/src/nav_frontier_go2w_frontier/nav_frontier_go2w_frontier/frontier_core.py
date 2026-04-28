@@ -5,7 +5,7 @@ The pipeline:
     2. cluster_frontier_cells — BFS connected components.
     3. compute_reachable_free_cells — flood fill from a robot seed cell.
     4. score_clusters — score = info_gain - lambda * travel_cost
-       where  info_gain   = unknown cells inside cluster bounding box
+       where  info_gain   = unknown cells inside the cluster's expanded neighbourhood
               travel_cost = euclidean distance robot → cluster goal cell (m)
     5. select_best_cluster — argmax score, restricted to reachable clusters.
 
@@ -53,7 +53,7 @@ class FrontierCluster:
     goal_x: Optional[float]
     goal_y: Optional[float]
     travel_cost: Optional[float]      # meters, robot → goal_cell
-    info_gain: int                    # # unknown cells in cluster bounding box
+    info_gain: int                    # # unknown cells around the cluster
     score: Optional[float]            # info_gain - lambda * travel_cost
 
 
@@ -258,17 +258,27 @@ def _bounding_box(cells: Sequence[Cell]) -> tuple[int, int, int, int]:
 
 
 def compute_info_gain(
-    map_data: Sequence[int], grid: GridSpec, cluster_cells: Sequence[Cell],
+    map_data: Sequence[int],
+    grid: GridSpec,
+    cluster_cells: Sequence[Cell],
+    radius_cells: int = 0,
 ) -> int:
-    """Number of unknown cells inside the cluster's axis-aligned bounding box.
+    """Number of unknown cells near a cluster.
 
-    This is a cheap proxy for "how much new map will I learn if I go there?" —
-    a tighter, more correct alternative (raycasting from the goal) is left for
-    later iterations.
+    The radius expands the cluster's axis-aligned bounding box before counting
+    unknown cells. This keeps the calculation cheap while avoiding the common
+    failure mode where a one-cell-wide frontier line has zero unknown cells
+    inside its exact bounding box.
     """
+    if radius_cells < 0:
+        raise ValueError("radius_cells must be non-negative")
     if not cluster_cells:
         return 0
     x_min, y_min, x_max, y_max = _bounding_box(cluster_cells)
+    x_min = max(0, x_min - radius_cells)
+    y_min = max(0, y_min - radius_cells)
+    x_max = min(grid.width - 1, x_max + radius_cells)
+    y_max = min(grid.height - 1, y_max + radius_cells)
     count = 0
     for y in range(y_min, y_max + 1):
         for x in range(x_min, x_max + 1):
@@ -311,11 +321,14 @@ def analyze_frontiers(
     min_cluster_size: int = 8,
     robot_seed_search_radius: int = 3,
     score_lambda: float = 0.5,
+    info_radius_cells: int = 2,
 ) -> FrontierSearchResult:
     """Run the full frontier pipeline and return all intermediates + selected cluster."""
     _validate(map_data, grid, connectivity)
     if min_cluster_size < 1:
         raise ValueError("min_cluster_size must be at least 1")
+    if info_radius_cells < 0:
+        raise ValueError("info_radius_cells must be non-negative")
 
     frontier_cells = detect_frontier_cells(map_data, grid, connectivity)
     raw_clusters = cluster_frontier_cells(frontier_cells, connectivity)
@@ -336,7 +349,9 @@ def analyze_frontiers(
     selected: Optional[FrontierCluster] = None
     for cluster_cells in sized_clusters:
         cx, cy = _cluster_centroid(grid, cluster_cells)
-        info_gain = compute_info_gain(map_data, grid, cluster_cells)
+        info_gain = compute_info_gain(
+            map_data, grid, cluster_cells, radius_cells=info_radius_cells,
+        )
 
         reachable_subset: list[Cell] = []
         goal_cell: Optional[Cell] = None

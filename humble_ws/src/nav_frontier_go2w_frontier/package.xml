@@ -7,8 +7,9 @@
     Frontier detection and goal selection for the Unitree Go2W. Subscribes to
     a 2D OccupancyGrid (typically from slam_toolbox), detects frontier cells
     (free cells adjacent to unknown), clusters them via BFS, scores reachable
-    clusters with score = info_gain - lambda * travel_cost, and publishes the
-    best cluster's goal as a PoseStamped on /frontier_goal.
+    clusters with score = info_gain - lambda * travel_cost, where info_gain
+    counts unknown cells in an expanded cluster neighbourhood, and publishes
+    the best cluster's goal as a PoseStamped on /frontier_goal.
   </description>
 
   <maintainer email="67k.tanaka@gmail.com">Koki Tanaka</maintainer>

@@ -117,6 +117,16 @@ class TestInfoGain:
         # Bounding box (0,0)-(1,1): values are -1, 0, 0, 0 → 1 unknown.
         assert compute_info_gain(data, grid, cluster) == 1
 
+    def test_radius_expands_unknown_count(self):
+        data, grid = _grid([
+            [0,  0,  0, -1],
+            [0,  0,  0,  0],
+            [0, -1,  0,  0],
+        ])
+        cluster = [(2, 1)]
+        assert compute_info_gain(data, grid, cluster, radius_cells=0) == 0
+        assert compute_info_gain(data, grid, cluster, radius_cells=1) == 2
+
 
 class TestScoring:
     def test_score_rewards_info_gain_penalises_distance(self):

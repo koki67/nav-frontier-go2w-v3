@@ -1,6 +1,6 @@
 # Architecture
 
-A bird's-eye view of the nav-frontier-go2w-v2 stack: what each layer does, how data flows between them, and the TF tree shape that has to hold for the system to make sense.
+A bird's-eye view of the nav-frontier-go2w-v3 stack: what each layer does, how data flows between them, and the TF tree shape that has to hold for the system to make sense.
 
 ## Pipeline (9 stages)
 
@@ -28,7 +28,7 @@ IMU /go2w/imu ───────────┘                              
 | `go2w_imu_publisher`               | Reads Go2W `/lowstate` from the unitree DDS bridge, republishes as `sensor_msgs/Imu` on `/go2w/imu`. |
 | `direct_lidar_inertial_odometry`   | LiDAR-Inertial odometry. Consumes `/points_raw` + `/go2w/imu`, publishes `/dlio/odom_node/odom` and broadcasts TF `odom → base_link`. The `map` topic on `dlio_map_node` is remapped to `dlio/map_node/map` so it doesn't collide with slam_toolbox's `/map`. |
 | `go2w_slam_toolbox_bringup`        | Composite: `pointcloud_to_laserscan` (3D cloud → 2D `/scan`) + `slam_toolbox` (`/scan` → `/map` + TF `map → odom`). |
-| `nav_frontier_go2w_frontier`       | Detects frontier cells in `/map`, clusters them by BFS, scores by `info_gain - λ * travel_cost`, publishes the best cluster's goal as `/frontier_goal` (`PoseStamped`) + visualization markers. |
+| `nav_frontier_go2w_frontier`       | Detects frontier cells in `/map`, clusters them by BFS, scores by `info_gain - λ * travel_cost`, publishes the best cluster's goal as `/frontier_goal` (`PoseStamped`) + visualization markers. `info_gain` counts unknown cells in an expanded cluster neighbourhood (`info_radius_cells`, default 2). |
 | `nav_frontier_go2w_planner`        | Nav2 stack (NavFn global planner + `nav2_mppi_controller` local controller, Omni model) **and** a frontier_goal_executor that consumes `/frontier_goal` and dispatches `NavigateToPose` actions. Output of MPPI flows through Nav2's velocity_smoother to land on `/cmd_vel`. |
 | `nav_frontier_go2w_bridge`         | Subscribes `/cmd_vel`, clamps to `(vx_max, vy_max, wz_max)`, encodes as `unitree_api/Request` (api_id=1008 Move, api_id=1003 StopMove), publishes on `/api/sport/request` at 50 Hz with a 0.5 s watchdog. |
 | `nav_frontier_go2w_bringup`        | Top-level `bringup.launch.py`. Composes everything above plus the static TFs `base_link → hesai_lidar` (t=`[0.1634, 0, 0.116]`, yaw=+π/2) and `base_link → imu_link` (t=`[0,0,0]`, yaw=+π/2). |
@@ -48,7 +48,7 @@ If you only see `odom → base_link`, slam_toolbox isn't running or hasn't recei
 ## A frontier-→-motion cycle
 
 1. `/map` updates from slam_toolbox at ~1 Hz.
-2. `frontier_selector` runs at 2 Hz: detect frontier cells → cluster → score → publish best goal on `/frontier_goal`.
+2. `frontier_selector` runs at 2 Hz: detect frontier cells → cluster → score reachable clusters with expanded-neighbourhood information gain → publish best goal on `/frontier_goal`.
 3. `frontier_goal_executor` receives the goal:
    - If idle, sends it to Nav2 via `BasicNavigator.goToPose()`.
    - If a goal is already active and the new one is far from it (> `min_goal_update_distance`), queue it as pending.

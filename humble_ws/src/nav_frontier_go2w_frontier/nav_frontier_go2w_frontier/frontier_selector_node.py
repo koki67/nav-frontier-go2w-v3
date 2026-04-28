@@ -44,6 +44,7 @@ class FrontierSelectorNode(Node):
         self.declare_parameter("connectivity", 8)
         self.declare_parameter("min_cluster_size", 8)
         self.declare_parameter("score_lambda", 0.5)
+        self.declare_parameter("info_radius_cells", 2)
         self.declare_parameter("publish_markers", True)
         self.declare_parameter("tf_timeout", 0.2)
 
@@ -56,6 +57,7 @@ class FrontierSelectorNode(Node):
         self._connectivity = int(self.get_parameter("connectivity").value)
         self._min_cluster_size = max(int(self.get_parameter("min_cluster_size").value), 1)
         self._score_lambda = float(self.get_parameter("score_lambda").value)
+        self._info_radius_cells = max(int(self.get_parameter("info_radius_cells").value), 0)
         self._publish_markers = bool(self.get_parameter("publish_markers").value)
         self._tf_timeout = float(self.get_parameter("tf_timeout").value)
 
@@ -88,9 +90,10 @@ class FrontierSelectorNode(Node):
 
         self.get_logger().info(
             "Frontier selector ready: map=%s goal=%s frame=%s base=%s "
-            "connectivity=%d min_cluster=%d lambda=%.3f",
+            "connectivity=%d min_cluster=%d lambda=%.3f info_radius=%d",
             self._map_topic, self._goal_topic, self._global_frame, self._robot_base_frame,
             self._connectivity, self._min_cluster_size, self._score_lambda,
+            self._info_radius_cells,
         )
 
     def _on_map(self, msg: OccupancyGrid) -> None:
@@ -127,6 +130,7 @@ class FrontierSelectorNode(Node):
                 connectivity=self._connectivity,
                 min_cluster_size=self._min_cluster_size,
                 score_lambda=self._score_lambda,
+                info_radius_cells=self._info_radius_cells,
             )
         except ValueError as exc:
             self._throttled_warn("bad_map", "Skipping map: %s" % exc, 5.0)

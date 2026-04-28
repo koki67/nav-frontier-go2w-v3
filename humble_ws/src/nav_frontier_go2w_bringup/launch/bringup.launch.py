@@ -43,6 +43,7 @@ def generate_launch_description():
     vy_max = LaunchConfiguration("vy_max")
     wz_max = LaunchConfiguration("wz_max")
     score_lambda = LaunchConfiguration("score_lambda")
+    info_radius_cells = LaunchConfiguration("info_radius_cells")
 
     declared_args = [
         DeclareLaunchArgument("use_sim_time", default_value="false",
@@ -56,6 +57,8 @@ def generate_launch_description():
         DeclareLaunchArgument("wz_max", default_value="0.50"),
         DeclareLaunchArgument("score_lambda", default_value="0.5",
                               description="Frontier scoring lambda: score = info_gain - lambda * travel_cost(m)."),
+        DeclareLaunchArgument("info_radius_cells", default_value="2",
+                              description="Cell-radius expansion used when counting frontier information gain."),
     ]
 
     # ---- Static TFs (Go2W URDF extrinsics, taken from D-LIO dlio.yaml) ----
@@ -124,6 +127,7 @@ def generate_launch_description():
         ])),
         launch_arguments={
             "score_lambda": score_lambda,
+            "info_radius_cells": info_radius_cells,
             "use_sim_time": use_sim_time,
         }.items(),
     )
