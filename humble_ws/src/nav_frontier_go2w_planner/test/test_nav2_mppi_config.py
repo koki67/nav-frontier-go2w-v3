@@ -61,3 +61,22 @@ def test_nav2_velocity_caps_match_bridge_defaults():
         bridge_params["vy_max"],
         bridge_params["wz_max"],
     ])
+
+
+def test_nav2_launch_uses_dedicated_params_argument():
+    nav2_launch = (PLANNER_ROOT / "launch" / "nav2_navigation.launch.py").read_text(
+        encoding="utf-8",
+    )
+    frontier_launch = (PLANNER_ROOT / "launch" / "frontier_planner.launch.py").read_text(
+        encoding="utf-8",
+    )
+
+    assert 'LaunchConfiguration("nav2_params_file")' in nav2_launch
+    assert 'DeclareLaunchArgument("nav2_params_file"' in nav2_launch
+    assert 'LaunchConfiguration("params_file")' not in nav2_launch
+    assert 'DeclareLaunchArgument("params_file"' not in nav2_launch
+
+    assert 'LaunchConfiguration("nav2_params_file")' in frontier_launch
+    assert '"nav2_params_file": nav2_params_file' in frontier_launch
+    assert 'LaunchConfiguration("params_file")' not in frontier_launch
+    assert 'DeclareLaunchArgument("params_file"' not in frontier_launch

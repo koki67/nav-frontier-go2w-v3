@@ -63,7 +63,7 @@ class FrontierSelectorNode(Node):
 
         if self._connectivity not in (4, 8):
             self.get_logger().warning(
-                "Unsupported connectivity %d; defaulting to 8.", self._connectivity,
+                "Unsupported connectivity %d; defaulting to 8." % self._connectivity,
             )
             self._connectivity = 8
 
@@ -89,11 +89,15 @@ class FrontierSelectorNode(Node):
         self._timer = self.create_timer(1.0 / self._update_rate, self._on_timer)
 
         self.get_logger().info(
-            "Frontier selector ready: map=%s goal=%s frame=%s base=%s "
-            "connectivity=%d min_cluster=%d lambda=%.3f info_radius=%d",
-            self._map_topic, self._goal_topic, self._global_frame, self._robot_base_frame,
-            self._connectivity, self._min_cluster_size, self._score_lambda,
-            self._info_radius_cells,
+            (
+                "Frontier selector ready: map=%s goal=%s frame=%s base=%s "
+                "connectivity=%d min_cluster=%d lambda=%.3f info_radius=%d"
+            )
+            % (
+                self._map_topic, self._goal_topic, self._global_frame, self._robot_base_frame,
+                self._connectivity, self._min_cluster_size, self._score_lambda,
+                self._info_radius_cells,
+            )
         )
 
     def _on_map(self, msg: OccupancyGrid) -> None:
@@ -158,10 +162,12 @@ class FrontierSelectorNode(Node):
             self._last_published_goal = key
             sel = result.selected_cluster
             self.get_logger().info(
-                "Goal: x=%.2f y=%.2f info_gain=%d travel=%.2fm score=%.2f (clusters=%d)",
-                goal.pose.position.x, goal.pose.position.y,
-                sel.info_gain, sel.travel_cost or 0.0, sel.score or 0.0,
-                len(result.clusters),
+                "Goal: x=%.2f y=%.2f info_gain=%d travel=%.2fm score=%.2f (clusters=%d)"
+                % (
+                    goal.pose.position.x, goal.pose.position.y,
+                    sel.info_gain, sel.travel_cost or 0.0, sel.score or 0.0,
+                    len(result.clusters),
+                )
             )
 
     def _lookup_robot_pose(self, frame_id: str) -> Optional[RobotPose2D]:

@@ -69,9 +69,11 @@ class VelocityBridgeNode(Node):
         self._timer = self.create_timer(1.0 / publish_rate, self._on_timer)
 
         self.get_logger().info(
-            "Velocity bridge ready: caps=(%.2f, %.2f, %.2f) rate=%.1fHz watchdog=%.2fs dry_run=%s",
-            self._vx_max, self._vy_max, self._wz_max, publish_rate,
-            self._watchdog_timeout_ns / 1e9, self._dry_run,
+            "Velocity bridge ready: caps=(%.2f, %.2f, %.2f) rate=%.1fHz watchdog=%.2fs dry_run=%s"
+            % (
+                self._vx_max, self._vy_max, self._wz_max, publish_rate,
+                self._watchdog_timeout_ns / 1e9, self._dry_run,
+            )
         )
 
     @property
@@ -112,7 +114,7 @@ class VelocityBridgeNode(Node):
 
     def _publish_move(self, parameter: str) -> None:
         if self._dry_run:
-            self.get_logger().debug("[DRY_RUN] Move %s", parameter)
+            self.get_logger().debug("[DRY_RUN] Move %s" % parameter)
             return
         req = Request()
         req.header.identity.api_id = self._api_id_move
@@ -121,13 +123,13 @@ class VelocityBridgeNode(Node):
 
     def _publish_stop(self, reason: str) -> None:
         if self._dry_run:
-            self.get_logger().info("[DRY_RUN] StopMove (%s)", reason)
+            self.get_logger().info("[DRY_RUN] StopMove (%s)" % reason)
             return
         req = Request()
         req.header.identity.api_id = self._api_id_stop
         req.parameter = ""
         self._req_pub.publish(req)
-        self.get_logger().info("StopMove emitted (%s)", reason)
+        self.get_logger().info("StopMove emitted (%s)" % reason)
 
     def shutdown_stop(self) -> None:
         """Best-effort StopMove on shutdown so the robot doesn't run away."""

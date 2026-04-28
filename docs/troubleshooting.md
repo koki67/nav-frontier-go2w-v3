@@ -18,6 +18,7 @@ Common bring-up issues and how to diagnose them.
 ## Slam_toolbox isn't producing /map
 
 - `ros2 topic hz /scan` — pointcloud_to_laserscan needs `/points_raw` and the `base_link → hesai_lidar` static TF.
+- `ros2 topic hz /go2w/imu` — D-LIO needs IMU messages before it can maintain `odom → base_link`. If this is silent, check `ros2 topic hz /lowstate`; the IMU publisher only republishes the Unitree low-state stream.
 - `ros2 run tf2_tools view_frames` — confirm `map → odom → base_link → hesai_lidar` are all present.
 - `ros2 param get /slam_toolbox base_frame` — if it doesn't match what D-LIO publishes for `base_link`, the SLAM optimization will silently fail.
 
@@ -39,6 +40,10 @@ Common bring-up issues and how to diagnose them.
 ## "Nav2 is not active yet"
 
 The frontier_goal_executor logs this when bt_navigator hasn't reached the `active` lifecycle state. Cause: the lifecycle manager didn't `autostart`, or one of the Nav2 nodes failed during `configure`. Check `ros2 lifecycle nodes` and look at the failing node's stderr.
+
+If the controller configures as `dwb_core::DWBLocalPlanner`, the wrong Nav2
+parameter file was loaded. This stack should log
+`nav2_mppi_controller::MPPIController` for `FollowPath`.
 
 ## RViz can't see /points_raw
 

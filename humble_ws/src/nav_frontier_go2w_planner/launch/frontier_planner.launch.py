@@ -22,7 +22,7 @@ def generate_launch_description():
     executor_config = os.path.join(pkg_share, "config", "frontier_goal_executor.yaml")
 
     use_sim_time = LaunchConfiguration("use_sim_time")
-    params_file = LaunchConfiguration("params_file")
+    nav2_params_file = LaunchConfiguration("nav2_params_file")
 
     nav2_launch = PathJoinSubstitution([
         FindPackageShare("nav_frontier_go2w_planner"),
@@ -31,12 +31,12 @@ def generate_launch_description():
 
     return LaunchDescription([
         DeclareLaunchArgument("use_sim_time", default_value="false"),
-        DeclareLaunchArgument("params_file", default_value=nav2_default_params),
+        DeclareLaunchArgument("nav2_params_file", default_value=nav2_default_params),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(nav2_launch),
             launch_arguments={
                 "use_sim_time": use_sim_time,
-                "params_file": params_file,
+                "nav2_params_file": nav2_params_file,
             }.items(),
         ),
         Node(

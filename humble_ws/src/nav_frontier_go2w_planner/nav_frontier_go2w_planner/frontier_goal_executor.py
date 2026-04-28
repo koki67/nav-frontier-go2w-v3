@@ -70,9 +70,11 @@ class FrontierGoalExecutorNode(Node):
         self._timer = self.create_timer(1.0 / result_rate, self._on_timer)
 
         self.get_logger().info(
-            "Frontier goal executor ready: topic=%s frame=%s base=%s min_update=%.2f timeout=%.0fs",
-            self._goal_topic, self._global_frame, self._robot_base_frame,
-            self._min_update, self._goal_timeout,
+            "Frontier goal executor ready: topic=%s frame=%s base=%s min_update=%.2f timeout=%.0fs"
+            % (
+                self._goal_topic, self._global_frame, self._robot_base_frame,
+                self._min_update, self._goal_timeout,
+            )
         )
 
     def destroy_node(self) -> bool:
@@ -123,8 +125,8 @@ class FrontierGoalExecutorNode(Node):
             return
         if decision.action == Action.QUEUE and decision.goal is not None:
             self.get_logger().info(
-                "Queued goal: x=%.2f y=%.2f (%s)",
-                decision.goal.x, decision.goal.y, decision.reason,
+                "Queued goal: x=%.2f y=%.2f (%s)"
+                % (decision.goal.x, decision.goal.y, decision.reason)
             )
             return
         if decision.action == Action.DISPATCH and decision.goal is not None:
@@ -136,18 +138,18 @@ class FrontierGoalExecutorNode(Node):
             with self._navigator_lock:
                 accepted = self._navigator.goToPose(msg)
         except Exception as exc:
-            self.get_logger().error("Nav2 goToPose() raised: %s", exc)
+            self.get_logger().error("Nav2 goToPose() raised: %s" % exc)
             self._apply(self._policy.complete_active(Outcome.FAILED))
             return
         if not accepted:
             self.get_logger().error(
-                "Nav2 rejected goal x=%.2f y=%.2f.", goal.x, goal.y,
+                "Nav2 rejected goal x=%.2f y=%.2f." % (goal.x, goal.y)
             )
             self._apply(self._policy.complete_active(Outcome.FAILED))
             return
         self._active_started_at = time.monotonic()
         self._timeout_requested = False
-        self.get_logger().info("Sent goal to Nav2: x=%.2f y=%.2f", goal.x, goal.y)
+        self.get_logger().info("Sent goal to Nav2: x=%.2f y=%.2f" % (goal.x, goal.y))
 
     def _maybe_cancel_for_timeout(self) -> None:
         if not should_cancel_for_timeout(
@@ -160,14 +162,14 @@ class FrontierGoalExecutorNode(Node):
         self._timeout_requested = True
         active = self._policy.active
         self.get_logger().error(
-            "Timeout (%.0fs) on goal x=%.2f y=%.2f — canceling.",
-            self._goal_timeout, active.x if active else 0.0, active.y if active else 0.0,
+            "Timeout (%.0fs) on goal x=%.2f y=%.2f; canceling."
+            % (self._goal_timeout, active.x if active else 0.0, active.y if active else 0.0)
         )
         try:
             with self._navigator_lock:
                 self._navigator.cancelTask()
         except Exception as exc:
-            self.get_logger().error("cancelTask() raised: %s", exc)
+            self.get_logger().error("cancelTask() raised: %s" % exc)
 
     def _maybe_collect_result(self) -> None:
         try:
@@ -176,7 +178,7 @@ class FrontierGoalExecutorNode(Node):
                     return
                 result = self._navigator.getResult()
         except Exception as exc:
-            self.get_logger().error("Nav2 result query failed: %s", exc)
+            self.get_logger().error("Nav2 result query failed: %s" % exc)
             result = TaskResult.UNKNOWN
 
         active = self._policy.active
@@ -186,22 +188,25 @@ class FrontierGoalExecutorNode(Node):
 
         if result == TaskResult.SUCCEEDED:
             self.get_logger().info(
-                "Goal succeeded: x=%.2f y=%.2f",
-                active.x if active else 0.0, active.y if active else 0.0,
+                "Goal succeeded: x=%.2f y=%.2f"
+                % (active.x if active else 0.0, active.y if active else 0.0)
             )
             outcome = Outcome.SUCCEEDED
         elif result == TaskResult.CANCELED:
             log = self.get_logger().error if was_timeout else self.get_logger().warning
             log(
-                "Goal %s: x=%.2f y=%.2f",
-                "canceled (timeout)" if was_timeout else "canceled",
-                active.x if active else 0.0, active.y if active else 0.0,
+                "Goal %s: x=%.2f y=%.2f"
+                % (
+                    "canceled (timeout)" if was_timeout else "canceled",
+                    active.x if active else 0.0,
+                    active.y if active else 0.0,
+                )
             )
             outcome = Outcome.CANCELED
         else:
             self.get_logger().error(
-                "Goal failed: x=%.2f y=%.2f",
-                active.x if active else 0.0, active.y if active else 0.0,
+                "Goal failed: x=%.2f y=%.2f"
+                % (active.x if active else 0.0, active.y if active else 0.0)
             )
             outcome = Outcome.FAILED
 

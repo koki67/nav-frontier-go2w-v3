@@ -96,11 +96,26 @@ Then check that each upstream stage is publishing:
 
 ```bash
 ros2 topic hz /points_raw
+ros2 topic hz /lowstate
 ros2 topic hz /go2w/imu
 ros2 topic hz /scan
 ros2 topic echo --once /map
 ros2 topic echo /frontier_goal
 ros2 topic hz /cmd_vel
+```
+
+`/go2w/imu` is republished from the Unitree `/lowstate` topic. If
+`/points_raw` and `/scan` are alive but `/go2w/imu` is silent, first fix the
+Unitree low-state/DDS side (`/lowstate`) before debugging D-LIO, `/map`,
+`/frontier_goal`, or `/cmd_vel`.
+
+The launch terminal should also show the in-repo nodes starting cleanly:
+
+```text
+Frontier selector ready: ...
+Frontier goal executor ready: ...
+Velocity bridge ready: ... dry_run=True
+Created controller : FollowPath of type nav2_mppi_controller::MPPIController
 ```
 
 The dry-run safety check is that no real Sport API request is emitted:
