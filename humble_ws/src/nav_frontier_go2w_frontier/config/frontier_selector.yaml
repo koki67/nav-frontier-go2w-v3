@@ -1,0 +1,13 @@
+frontier_selector:
+  ros__parameters:
+    map_topic: /map
+    global_frame: map
+    robot_base_frame: base_link
+    goal_topic: /frontier_goal
+    markers_topic: /frontier_markers
+    update_rate: 2.0          # Hz
+    connectivity: 8           # 4 or 8
+    min_cluster_size: 8       # cells
+    score_lambda: 0.5         # score = info_gain - lambda * travel_cost(m)
+    publish_markers: true
+    tf_timeout: 0.2           # seconds

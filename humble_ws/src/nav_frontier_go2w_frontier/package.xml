@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>nav_frontier_go2w_frontier</name>
+  <version>0.1.0</version>
+  <description>
+    Frontier detection and goal selection for the Unitree Go2W. Subscribes to
+    a 2D OccupancyGrid (typically from slam_toolbox), detects frontier cells
+    (free cells adjacent to unknown), clusters them via BFS, scores reachable
+    clusters with score = info_gain - lambda * travel_cost, and publishes the
+    best cluster's goal as a PoseStamped on /frontier_goal.
+  </description>
+
+  <maintainer email="67k.tanaka@gmail.com">Koki Tanaka</maintainer>
+  <license>MIT</license>
+
+  <depend>rclpy</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>visualization_msgs</depend>
+  <depend>tf2_ros</depend>
+
+  <test_depend>python3-pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
