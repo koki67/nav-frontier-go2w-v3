@@ -1,0 +1,41 @@
+common:
+  default_window: bringup
+
+parameters:
+  source: /workspace/humble_ws/install/setup.bash
+
+windows:
+  - commands:
+      - source ${source}
+      - ros2 launch nav_frontier_go2w_bringup bringup.launch.py use_rviz:=false bridge_dry_run:=true
+    name: bringup
+
+  - commands:
+      - source ${source}
+      - ros2 topic hz /points_raw
+    name: hesai_hz
+
+  - commands:
+      - source ${source}
+      - ros2 topic hz /scan
+    name: scan_hz
+
+  - commands:
+      - source ${source}
+      - ros2 topic echo /frontier_goal
+    name: frontier_goal
+
+  - commands:
+      - source ${source}
+      - ros2 topic hz /cmd_vel
+    name: cmd_vel_hz
+
+  - commands:
+      - source ${source}
+      - ros2 topic hz /api/sport/request
+    name: api_sport_hz
+
+  - commands:
+      - source ${source}
+      - ros2 run tf2_tools view_frames
+    name: tf_dump
