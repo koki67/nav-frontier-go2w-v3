@@ -74,7 +74,7 @@ Start with `bridge_dry_run:=true` and conservative velocity caps. Once you have 
 
 ## Verify dry-run bringup
 
-Keep the launch terminal running. In a second terminal, enter the same running
+Keep the launch terminal running. Open a second terminal and enter the same
 container:
 
 ```bash
@@ -82,63 +82,33 @@ bash scripts/enter.sh
 source /workspace/humble_ws/install/setup.bash
 ```
 
-Confirm that the velocity bridge is in dry-run mode:
-
-```bash
-ros2 param get /velocity_bridge dry_run
-```
-
-Expected output:
-
-```text
-Boolean value is: True
-```
-
-Then check that each upstream stage is publishing:
+In that terminal, confirm dry-run mode and check that the main pipeline topics
+are publishing:
 
 ```bash
 echo "ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}"
+ros2 param get /velocity_bridge dry_run
 ros2 topic hz /points_raw
 ros2 topic hz /lowstate
 ros2 topic hz /go2w/imu
 ros2 topic hz /scan
 ros2 topic echo --once /map
-ros2 topic echo /frontier_goal
+ros2 topic echo --once /frontier_goal
+ros2 topic hz /cmd_vel_nav
 ros2 topic hz /cmd_vel
 ```
 
-`/go2w/imu` is republished from the Unitree `/lowstate` topic. If
-`/points_raw` and `/scan` are alive but `/go2w/imu` is silent, first fix the
-Unitree low-state/DDS side (`/lowstate`) before debugging D-LIO, `/map`,
-`/frontier_goal`, or `/cmd_vel`.
-
-If the host can see Unitree topics but the container only sees `/rosout` and
-`/parameter_events`, the container is isolated from the robot DDS graph. Confirm
-that `echo "${ROS_DOMAIN_ID:-0}"` prints the same value on the host and inside
-the container, then restart the container with that value exported before
-`bash docker/run.sh`.
-
-The launch terminal should also show the in-repo nodes starting cleanly:
-
-```text
-Frontier selector ready: ...
-Frontier goal executor ready: ...
-Velocity bridge ready: ... dry_run=True
-Created controller : FollowPath of type nav2_mppi_controller::MPPIController
-```
-
-The dry-run safety check is that no real Sport API request is emitted:
+The expected dry-run result is: `dry_run=True`, sensor topics are live, `/map`
+and `/frontier_goal` exist, Nav2 publishes `/cmd_vel_nav`, and the velocity
+smoother publishes `/cmd_vel`. Finally confirm that dry-run is not sending real
+Sport API requests:
 
 ```bash
 timeout 5 ros2 topic echo --once /api/sport/request
 ```
 
-Expected result: no message is printed before the timeout. A good dry-run test
-has `/map`, `/frontier_goal`, and `/cmd_vel` active, `dry_run=True`, no
-`/api/sport/request` output, and no robot motion. `bridge_dry_run:=true` does
-not suppress `/cmd_vel`; it only prevents forwarding `/cmd_vel` to
-`/api/sport/request`. If `/frontier_goal` appears but `/cmd_vel` never appears,
-debug Nav2/executor state before enabling motion.
+No message should be printed before the timeout. If any stage is missing, use
+`docs/troubleshooting.md` before running with `bridge_dry_run:=false`.
 
 ## Safety notes
 
