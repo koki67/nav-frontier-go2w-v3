@@ -60,9 +60,10 @@ ros2 topic list | grep -E '^/lowstate$|^/api/sport/request$'
 ## CycloneDDS interface selection
 
 `/etc/cyclonedds.xml` (baked into the image) defaults to `eth0`. On the Go2W
-onboard computer this is usually correct. On a desktop the interface is often
-`wlan0` or `en*`; edit `config/cyclonedds.xml` and rebuild the image, or start
-the container with `CYCLONEDDS_URI` pointing at a custom CycloneDDS profile.
+onboard computer this is usually correct. Use `bash docker/run.sh --remote-viz`
+to add the robot Wi-Fi interface for laptop RViz monitoring. On a desktop the
+interface is often `wlan0` or `en*`; use a local `CYCLONEDDS_URI` profile to
+bind RViz to that interface.
 
 ## MPPI plan thrashes / robot oscillates
 

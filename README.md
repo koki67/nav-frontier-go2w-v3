@@ -63,6 +63,9 @@ NAV_FRONTIER_PLATFORM=linux/amd64 NAV_FRONTIER_IMAGE=nav-frontier-go2w-v3:amd64-
 # which matches the stock Unitree onboard ROS graph.
 bash docker/run.sh
 
+# Optional: also expose the ROS 2 graph over Wi-Fi for laptop RViz monitoring.
+bash docker/run.sh --remote-viz
+
 # Inside the container — the workspace is built at image time. Launch the full stack:
 ros2 launch nav_frontier_go2w_bringup bringup.launch.py \
     use_rviz:=false \
@@ -114,7 +117,7 @@ No message should be printed before the timeout. If any stage is missing, use
 
 The velocity bridge enforces hard caps `(vx_max, vy_max, wz_max)` on every Twist before encoding it as a Sport API request. A 0.5 s `/cmd_vel` watchdog automatically emits a `StopMove` (`api_id=1003`) if the upstream stack stops publishing. Always keep the e-stop within reach for live tests.
 
-See `docs/architecture.md` for the dataflow, `docs/topics.md` for the full topic catalog, `docs/velocity-bridge.md` for the bridge contract, and `docs/troubleshooting.md` for common issues.
+See `docs/architecture.md` for the dataflow, `docs/topics.md` for the full topic catalog, `docs/remote-visualization.md` for laptop RViz monitoring, `docs/velocity-bridge.md` for the bridge contract, and `docs/troubleshooting.md` for common issues.
 
 ## License
 

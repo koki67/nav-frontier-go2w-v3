@@ -2,10 +2,9 @@
 <!--
   CycloneDDS profile for the Go2W frontier exploration stack.
 
-  The default network interface is `eth0` (typical robot setup).  For desktop
-  development you can override at runtime by exporting
-  CYCLONEDDS_NETWORK_INTERFACE=wlan0 (or whichever interface the host uses)
-  before starting the container, or by editing this file.
+  The default network interface is `eth0` (typical robot setup). Use
+  `bash docker/run.sh --remote-viz` to generate a dual-interface runtime
+  CycloneDDS profile for robot Ethernet plus Wi-Fi remote visualization.
 -->
 <CycloneDDS>
     <Domain Id="any">
