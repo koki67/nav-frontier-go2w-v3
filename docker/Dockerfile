@@ -48,6 +48,9 @@ RUN apt-get update -q && \
         ros-humble-nav2-lifecycle-manager \
         ros-humble-nav2-bt-navigator \
         ros-humble-nav2-simple-commander \
+        ros-humble-rosbag2 \
+        ros-humble-ros2bag \
+        ros-humble-rosbag2-storage-default-plugins \
         ros-humble-rmw-cyclonedds-cpp \
         ros-humble-pcl-conversions \
         ros-humble-pcl-ros \

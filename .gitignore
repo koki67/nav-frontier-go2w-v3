@@ -5,6 +5,7 @@ humble_ws/log/
 
 # Recorded data
 humble_ws/bags/
+bags/
 output/
 
 # Editor / OS
