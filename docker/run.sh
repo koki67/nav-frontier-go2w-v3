@@ -15,6 +15,10 @@ IMAGE="${NAV_FRONTIER_IMAGE:-nav-frontier-go2w-v3:latest}"
 ROBOT_IFACE="${NAV_FRONTIER_ROBOT_IFACE:-eth0}"
 REMOTE_VIZ_IFACE="${NAV_FRONTIER_REMOTE_IFACE:-wlan0}"
 REMOTE_VIZ="${NAV_FRONTIER_REMOTE_VIZ:-false}"
+ROBOT_IFACE_OVERRIDDEN=false
+if [ -n "${NAV_FRONTIER_ROBOT_IFACE:-}" ]; then
+    ROBOT_IFACE_OVERRIDDEN=true
+fi
 
 usage() {
     cat <<'EOF'
@@ -57,6 +61,7 @@ while [ "$#" -gt 0 ]; do
                 exit 2
             fi
             ROBOT_IFACE="$2"
+            ROBOT_IFACE_OVERRIDDEN=true
             shift 2
             ;;
         -h|--help)
@@ -89,10 +94,16 @@ build_cyclonedds_uri() {
     printf '<CycloneDDS><Domain><General><Interfaces>%s</Interfaces></General></Domain></CycloneDDS>' "$interfaces"
 }
 
+should_generate_cyclonedds_uri() {
+    [ "$REMOTE_VIZ" = "true" ] || [ "$ROBOT_IFACE_OVERRIDDEN" = "true" ]
+}
+
 if [ -n "${CYCLONEDDS_URI:-}" ]; then
     DDS_URI="$CYCLONEDDS_URI"
-else
+elif should_generate_cyclonedds_uri; then
     DDS_URI="$(build_cyclonedds_uri)"
+else
+    DDS_URI="file:///etc/cyclonedds.xml"
 fi
 
 # Allow local X11 connections (best-effort; not fatal in headless environments).
