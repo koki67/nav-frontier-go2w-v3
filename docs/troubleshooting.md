@@ -2,6 +2,41 @@
 
 Common bring-up issues and how to diagnose them.
 
+## Dry-run verification
+
+Keep the launch terminal running. Open a second terminal and enter the same
+container:
+
+```bash
+bash scripts/enter.sh
+source /workspace/humble_ws/install/setup.bash
+```
+
+Confirm dry-run mode and check that the main pipeline topics are publishing:
+
+```bash
+echo "ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}"
+ros2 param get /velocity_bridge dry_run
+ros2 topic hz /points_raw
+ros2 topic hz /lowstate
+ros2 topic hz /go2w/imu
+ros2 topic hz /scan
+ros2 topic echo --once /map
+ros2 topic echo --once /frontier_goal
+ros2 topic hz /cmd_vel_nav
+ros2 topic hz /cmd_vel
+```
+
+The expected result is: `dry_run=True`, sensor topics are live, `/map` and
+`/frontier_goal` exist, Nav2 publishes `/cmd_vel_nav`, and the velocity smoother
+publishes `/cmd_vel`. Finally confirm dry-run is not sending Sport API requests:
+
+```bash
+timeout 5 ros2 topic echo --once /api/sport/request
+```
+
+No message should be printed before the timeout.
+
 ## "robot stands but doesn't move" decision tree
 
 1. Is `/cmd_vel` publishing? `ros2 topic hz /cmd_vel`

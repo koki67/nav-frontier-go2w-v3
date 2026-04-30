@@ -59,14 +59,23 @@ you need to debug odometry input data; they can dominate disk usage quickly.
 
 ## Replay
 
-In a container or ROS 2 Humble environment with the same message packages:
+For desktop replay, copy the bag directory under the repository's local `bags/`
+directory and use the Humble devcontainer.
+
+Open RViz first so playback starts from the beginning:
 
 ```bash
-source /workspace/humble_ws/install/setup.bash
-ros2 bag info /external/bags/frontier_results_YYYYMMDD_HHMMSS
-ros2 bag play /external/bags/frontier_results_YYYYMMDD_HHMMSS --clock
+.devcontainer/start_replay_rviz.bash
 ```
 
-Open RViz in another terminal, set the fixed frame to `map`, and add the same
-displays used for online inspection: `/map`, costmaps, `/frontier_goal`,
-`/frontier_markers`, D-LIO odometry/path, MPPI trajectories, and `/cmd_vel`.
+In a second devcontainer terminal, play the bag:
+
+```bash
+.devcontainer/play_frontier_bag.bash /workspaces/nav-frontier-go2w-v3/bags/frontier_results_YYYYMMDD_HHMMSS
+```
+
+`start_replay_rviz.bash` starts RViz with `use_sim_time=true`, and
+`play_frontier_bag.bash` publishes `/clock` with `ros2 bag play --clock`.
+The preconfigured RViz layout already includes `/map`, costmaps,
+`/frontier_goal`, `/frontier_markers`, D-LIO odometry/path, MPPI trajectories,
+and `/cmd_vel`.
