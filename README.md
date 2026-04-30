@@ -119,6 +119,9 @@ The velocity bridge enforces hard caps `(vx_max, vy_max, wz_max)` on every Twist
 
 See `docs/architecture.md` for the dataflow, `docs/topics.md` for the full topic catalog, `docs/remote-visualization.md` for laptop RViz monitoring, `docs/velocity-bridge.md` for the bridge contract, and `docs/troubleshooting.md` for common issues.
 
+For Ubuntu 24.04 desktops, `.devcontainer/` provides a minimal ROS 2 Humble
+RViz environment for remote visualization without installing Humble on the host.
+
 ## License
 
 MIT — see `LICENSE`.

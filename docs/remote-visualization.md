@@ -46,6 +46,40 @@ Confirm discovery before opening a full RViz layout:
 ros2 topic list | grep -E '^/map$|^/frontier_goal$|^/cmd_vel$'
 ```
 
+### Humble Devcontainer On Ubuntu 24.04
+
+For an Ubuntu 24.04 desktop, use the repo's `.devcontainer/` setup to run RViz
+from a ROS 2 Humble container instead of mixing Jazzy on the laptop with Humble
+on the robot.
+
+Before opening the devcontainer, allow local Docker GUI access on the desktop:
+
+```bash
+xhost +local:docker
+```
+
+Then open the repository in VS Code and choose **Dev Containers: Reopen in
+Container**. Inside the container, start with automatic CycloneDDS interface
+selection:
+
+```bash
+source /opt/ros/humble/setup.bash
+ros2 topic list | grep -E '^/map$|^/frontier_goal$|^/cmd_vel$'
+rviz2
+```
+
+If the desktop has multiple interfaces and discovery is unreliable, bind
+CycloneDDS to the Wi-Fi interface connected to the robot network:
+
+```bash
+source .devcontainer/setup_remote_viz.bash enp97s0
+ros2 topic list | grep -E '^/map$|^/frontier_goal$|^/cmd_vel$'
+rviz2
+```
+
+For your current desktop, the robot-network interface is `enp97s0` with IP
+`192.168.111.100`. Replace it only if that host interface changes.
+
 ## What To Inspect
 
 DDS exposes the ROS 2 graph on the selected interfaces; this option does not
