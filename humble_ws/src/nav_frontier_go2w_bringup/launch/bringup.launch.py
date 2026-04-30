@@ -19,20 +19,80 @@ Static TFs use the Go2W extrinsics from D-LIO's dlio.yaml:
     base_link -> imu_link    : t=[0,      0, 0]       yaw=+pi/2
 """
 import math
-import os
+from datetime import datetime
+from pathlib import Path
 
-from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import (
+    DeclareLaunchArgument,
+    ExecuteProcess,
+    IncludeLaunchDescription,
+    LogInfo,
+    OpaqueFunction,
+)
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 
+RESULT_RECORDING_REGEX = (
+    r"^("
+    r"/clock|"
+    r"/tf|/tf_static|"
+    r"/map|/map_updates|"
+    r"/scan|"
+    r"/dlio/odom_node/(odom|pose|path|keyframes)|"
+    r"/dlio/odom_node/pointcloud/(keyframe|deskewed)|"
+    r"/dlio/map_node/map|"
+    r"/frontier_goal|/frontier_markers|"
+    r"/global_costmap/(costmap|costmap_raw|costmap_updates|published_footprint)|"
+    r"/local_costmap/(costmap|costmap_raw|costmap_updates|published_footprint)|"
+    r"/(plan|global_plan|local_plan|received_global_plan|transformed_global_plan|trajectories|trajectory|optimal_trajectory)|"
+    r"/cmd_vel_nav|/cmd_vel|"
+    r"/api/sport/(request|response)|"
+    r"/navigate_to_pose/_action/(goal|feedback|status|result|cancel)|"
+    r"/compute_path_to_pose/_action/(goal|feedback|status|result|cancel)|"
+    r"/follow_path/_action/(goal|feedback|status|result|cancel)|"
+    r"/smooth_path/_action/(goal|feedback|status|result|cancel)"
+    r")$"
+)
+
+_TRUE_VALUES = {"1", "true", "yes", "on"}
+
 
 def _yaw_quat_z_w(yaw_rad: float) -> tuple[str, str]:
     return (str(math.sin(yaw_rad / 2.0)), str(math.cos(yaw_rad / 2.0)))
+
+
+def _launch_bool(value: str) -> bool:
+    return value.strip().lower() in _TRUE_VALUES
+
+
+def _result_recording_actions(context, *args, **kwargs):
+    if not _launch_bool(LaunchConfiguration("record_results").perform(context)):
+        return []
+
+    bag_dir = Path(LaunchConfiguration("record_bag_dir").perform(context)).expanduser()
+    bag_prefix = LaunchConfiguration("record_bag_prefix").perform(context).strip() or "frontier_results"
+    storage = LaunchConfiguration("record_storage").perform(context).strip() or "sqlite3"
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    output_path = bag_dir / f"{bag_prefix}_{timestamp}"
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    return [
+        LogInfo(msg=f"Recording frontier results rosbag to {output_path}"),
+        ExecuteProcess(
+            cmd=[
+                "ros2", "bag", "record",
+                "--storage", storage,
+                "--include-hidden-topics",
+                "--regex", RESULT_RECORDING_REGEX,
+                "-o", str(output_path),
+            ],
+            output="screen",
+        ),
+    ]
 
 
 def generate_launch_description():
@@ -59,6 +119,14 @@ def generate_launch_description():
                               description="Frontier scoring lambda: score = info_gain - lambda * travel_cost(m)."),
         DeclareLaunchArgument("info_radius_cells", default_value="2",
                               description="Cell-radius expansion used when counting frontier information gain."),
+        DeclareLaunchArgument("record_results", default_value="false",
+                              description="Record the frontier navigation result topics to a rosbag."),
+        DeclareLaunchArgument("record_bag_dir", default_value="/external/bags",
+                              description="Directory where result rosbags are written."),
+        DeclareLaunchArgument("record_bag_prefix", default_value="frontier_results",
+                              description="Filename prefix for timestamped result rosbag directories."),
+        DeclareLaunchArgument("record_storage", default_value="sqlite3",
+                              description="rosbag2 storage plugin used for result recording."),
     ]
 
     # ---- Static TFs (Go2W URDF extrinsics, taken from D-LIO dlio.yaml) ----
@@ -176,4 +244,5 @@ def generate_launch_description():
         planner_include,
         bridge_include,
         rviz_include,
+        OpaqueFunction(function=_result_recording_actions),
     ])

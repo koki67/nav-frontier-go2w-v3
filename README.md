@@ -75,6 +75,10 @@ ros2 launch nav_frontier_go2w_bringup bringup.launch.py \
 
 Start with `bridge_dry_run:=true` and conservative velocity caps. Once you have validated `/cmd_vel`, `/frontier_goal`, and `/map` in RViz, set `bridge_dry_run:=false` to enable motion.
 
+To save an offline record of a run, add `record_results:=true`. Bags are written
+to `/external/bags` inside the container, which maps to `./bags/` on the host
+when using `docker/run.sh`.
+
 ## Verify dry-run bringup
 
 Keep the launch terminal running. Open a second terminal and enter the same
@@ -117,10 +121,11 @@ No message should be printed before the timeout. If any stage is missing, use
 
 The velocity bridge enforces hard caps `(vx_max, vy_max, wz_max)` on every Twist before encoding it as a Sport API request. A 0.5 s `/cmd_vel` watchdog automatically emits a `StopMove` (`api_id=1003`) if the upstream stack stops publishing. Always keep the e-stop within reach for live tests.
 
-See `docs/architecture.md` for the dataflow, `docs/topics.md` for the full topic catalog, `docs/remote-visualization.md` for laptop RViz monitoring, `docs/velocity-bridge.md` for the bridge contract, and `docs/troubleshooting.md` for common issues.
+See `docs/architecture.md` for the dataflow, `docs/topics.md` for the full topic catalog, `docs/result-recording.md` for rosbag output/replay, `docs/remote-visualization.md` for laptop RViz over Wi-Fi, `docs/velocity-bridge.md` for the bridge contract, and `docs/troubleshooting.md` for common issues.
 
 For Ubuntu 24.04 desktops, `.devcontainer/` provides a minimal ROS 2 Humble
-RViz environment for remote visualization without installing Humble on the host.
+RViz environment for both remote visualization and local rosbag replay without
+installing Humble on the host.
 
 ## License
 

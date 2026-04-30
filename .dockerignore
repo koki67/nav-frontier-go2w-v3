@@ -7,6 +7,7 @@ humble_ws/build/
 humble_ws/install/
 humble_ws/log/
 humble_ws/bags/
+bags/
 output/
 
 .vscode/

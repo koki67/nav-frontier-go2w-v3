@@ -22,6 +22,8 @@
   <exec_depend>nav_frontier_go2w_frontier</exec_depend>
   <exec_depend>nav_frontier_go2w_planner</exec_depend>
   <exec_depend>nav_frontier_go2w_bridge</exec_depend>
+  <exec_depend>ros2bag</exec_depend>
+  <exec_depend>rosbag2_storage_default_plugins</exec_depend>
   <exec_depend>tf2_ros</exec_depend>
 
   <export>
