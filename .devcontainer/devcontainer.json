@@ -22,6 +22,9 @@
   ],
   "customizations": {
     "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/bin/python3"
+      },
       "extensions": [
         "ms-iot.vscode-ros"
       ]

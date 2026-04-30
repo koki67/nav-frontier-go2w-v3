@@ -47,3 +47,23 @@ Pass a different interface only if the desktop robot-network NIC changes:
 ```bash
 .devcontainer/start_remote_rviz.bash wlp2s0
 ```
+
+## Local Rosbag Replay
+
+For offline replay, use the copied bags under `./bags/`. This mode is local to
+the devcontainer and does not need the robot DDS interface.
+
+Open RViz first so replay starts from the beginning:
+
+```bash
+.devcontainer/start_replay_rviz.bash
+```
+
+In a second terminal, play the bag with the matching replay environment:
+
+```bash
+.devcontainer/play_frontier_bag.bash /workspaces/nav-frontier-go2w-v3/bags/frontier_results_YYYYMMDD_HHMMSS
+```
+
+`start_replay_rviz.bash` sets RViz `use_sim_time=true`, and
+`play_frontier_bag.bash` publishes `/clock` with `ros2 bag play --clock`.
