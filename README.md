@@ -31,7 +31,9 @@ Nav2 global/local planning
 
 For the detailed architecture and topic catalog, see
 [docs/architecture.md](docs/architecture.md) and
-[docs/topics.md](docs/topics.md).
+[docs/topics.md](docs/topics.md). For the frontier selection algorithm and
+tuning surfaces, see [docs/frontier-selector.md](docs/frontier-selector.md) and
+[docs/tuning-parameters.md](docs/tuning-parameters.md).
 
 ## Quick Start
 
