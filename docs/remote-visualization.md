@@ -65,7 +65,7 @@ selection:
 ```bash
 source /opt/ros/humble/setup.bash
 ros2 topic list | grep -E '^/map$|^/frontier_goal$|^/cmd_vel$'
-rviz2
+rviz2 -d .devcontainer/frontier_remote.rviz
 ```
 
 If the desktop has multiple interfaces and discovery is unreliable, bind
@@ -74,17 +74,25 @@ CycloneDDS to the Wi-Fi interface connected to the robot network:
 ```bash
 source .devcontainer/setup_remote_viz.bash enp97s0
 ros2 topic list | grep -E '^/map$|^/frontier_goal$|^/cmd_vel$'
-rviz2
+rviz2 -d .devcontainer/frontier_remote.rviz
 ```
 
 For your current desktop, the robot-network interface is `enp97s0` with IP
 `192.168.111.100`. Replace it only if that host interface changes.
 
+For the usual desktop setup, this helper runs the same DDS setup and opens the
+saved RViz layout:
+
+```bash
+.devcontainer/start_remote_rviz.bash
+```
+
 ## What To Inspect
 
 DDS exposes the ROS 2 graph on the selected interfaces; this option does not
-filter by topic. In RViz, set the fixed frame to `map` and add the displays you
-need for the current debugging session.
+filter by topic. The devcontainer RViz profile sets the fixed frame to `map`
+and preloads the displays below. If launching RViz manually, add the same
+displays for the current debugging session.
 
 Core frontier-navigation workflow:
 

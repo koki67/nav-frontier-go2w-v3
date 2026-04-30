@@ -28,9 +28,22 @@ interface connected to the robot network:
 source /opt/ros/humble/setup.bash
 source .devcontainer/setup_remote_viz.bash enp97s0
 ros2 topic list | grep -E '^/map$|^/frontier_goal$|^/cmd_vel$'
-rviz2
+rviz2 -d .devcontainer/frontier_remote.rviz
 ```
 
 The desktop interface connected to the robot network is currently expected to be
 `enp97s0` with IP `192.168.111.100`. Replace it only if that host interface
 changes. Keep `ROS_DOMAIN_ID` the same as the robot container.
+
+For the normal desktop setup, the helper below does the source/setup step and
+opens RViz with the preconfigured frontier-navigation layout:
+
+```bash
+.devcontainer/start_remote_rviz.bash
+```
+
+Pass a different interface only if the desktop robot-network NIC changes:
+
+```bash
+.devcontainer/start_remote_rviz.bash wlp2s0
+```
