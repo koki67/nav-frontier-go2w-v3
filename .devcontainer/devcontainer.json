@@ -1,0 +1,30 @@
+{
+  "name": "nav-frontier-go2w remote RViz (Humble)",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": ".."
+  },
+  "workspaceFolder": "/workspaces/nav-frontier-go2w-v3",
+  "remoteUser": "root",
+  "runArgs": [
+    "--net=host",
+    "--ipc=host",
+    "--privileged"
+  ],
+  "containerEnv": {
+    "DISPLAY": "${localEnv:DISPLAY}",
+    "QT_X11_NO_MITSHM": "1",
+    "RMW_IMPLEMENTATION": "rmw_cyclonedds_cpp",
+    "ROS_DOMAIN_ID": "0"
+  },
+  "mounts": [
+    "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-iot.vscode-ros"
+      ]
+    }
+  }
+}

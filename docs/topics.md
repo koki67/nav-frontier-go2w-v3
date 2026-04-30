@@ -15,6 +15,10 @@
 | `/map`                         | `nav_msgs/OccupancyGrid`          | pub       | `slam_toolbox`                    | TRANSIENT_LOCAL durability. |
 | `/frontier_goal`               | `geometry_msgs/PoseStamped`       | pub       | `frontier_selector`               | One pose per timer tick. Frame: `map`. |
 | `/frontier_markers`            | `visualization_msgs/MarkerArray`  | pub       | `frontier_selector`               | RViz overlays. |
+| `/global_costmap/costmap`      | `nav_msgs/OccupancyGrid`          | pub       | `planner_server`                  | Global planning costmap for RViz Map display. |
+| `/global_costmap/costmap_raw`  | `nav2_msgs/Costmap`               | pub       | `planner_server`                  | Nav2 raw global costmap. |
+| `/local_costmap/costmap`       | `nav_msgs/OccupancyGrid`          | pub       | `controller_server`               | Local obstacle/inflation costmap for RViz Map display. |
+| `/local_costmap/costmap_raw`   | `nav2_msgs/Costmap`               | pub       | `controller_server`               | Nav2 raw local costmap. |
 | `/cmd_vel_nav`                 | `geometry_msgs/Twist`             | pub       | `controller_server` (MPPI)        | Pre-smoothing output. |
 | `/cmd_vel`                     | `geometry_msgs/Twist`             | pub       | `velocity_smoother`               | What the velocity bridge consumes. |
 | `/api/sport/request`           | `unitree_api/Request`             | pub       | `velocity_bridge`                 | Final motion command. Move=1008, StopMove=1003. |
