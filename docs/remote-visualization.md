@@ -124,6 +124,6 @@ frontier selection.
 
 ## Bandwidth Notes
 
-Start with `/map`, costmaps, TF, `/frontier_goal`, and `/frontier_markers`.
-Enable `/points_raw` and `/dlio/map_node/map` only when you need point-cloud
-detail; they are the most likely topics to saturate Wi-Fi or make RViz lag.
+Start with `/map`, costmaps, TF, `/frontier_goal`, `/frontier_markers`, and the
+D-LIO map cloud. Keep `/points_raw` disabled unless you need raw LiDAR detail;
+it is the topic most likely to saturate Wi-Fi or make RViz lag.

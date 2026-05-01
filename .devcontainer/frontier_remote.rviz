@@ -342,7 +342,7 @@ Visualization Manager:
           Class: rviz_default_plugins/PointCloud2
           Color Transformer: AxisColor
           Decay Time: 0
-          Enabled: false
+          Enabled: true
           Name: D-LIO Map Cloud
           Position Transformer: XYZ
           Selectable: true
@@ -356,7 +356,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /dlio/map_node/map
           Use Fixed Frame: true
-          Value: false
+          Value: true
       Enabled: true
       Name: Sensors
   Enabled: true
