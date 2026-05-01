@@ -346,7 +346,7 @@ Visualization Manager:
           Name: D-LIO Map Cloud
           Position Transformer: XYZ
           Selectable: true
-          Size (Pixels): 2
+          Size (Pixels): 4
           Size (m): 0.03
           Style: Points
           Topic:
