@@ -68,6 +68,13 @@ Open RViz first so playback starts from the beginning:
 .devcontainer/start_replay_rviz.bash
 ```
 
+For 3D replay of the D-LIO map cloud with the same ground-plane navigation
+overlays:
+
+```bash
+.devcontainer/start_replay_rviz_3d.bash
+```
+
 In a second devcontainer terminal, play the bag:
 
 ```bash

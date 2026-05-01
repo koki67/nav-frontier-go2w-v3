@@ -87,6 +87,13 @@ saved RViz layout:
 .devcontainer/start_remote_rviz.bash
 ```
 
+For a 3D camera view of the D-LIO map cloud with the 2D map, costmap, frontier,
+and path overlays still projected on the ground plane, use:
+
+```bash
+.devcontainer/start_remote_rviz_3d.bash
+```
+
 ## What To Inspect
 
 DDS exposes the ROS 2 graph on the selected interfaces; this option does not
@@ -118,7 +125,8 @@ Sensor and controller diagnostics:
 | MarkerArray | `/trajectories` | MPPI sampled trajectory visualization when available. |
 | Path | `/transformed_global_plan` | MPPI/controller path visualization when available. |
 
-The saved RViz layout keeps the raw `/map` display available but disabled.
+The saved 2D and 3D RViz layouts keep the raw `/map` display available but
+disabled.
 Instead, `map_viz_layers` derives `/map_known_cells` and `/map_unknown_cells`
 from `/map` so the unknown-space square can have its own color and alpha.
 Costmaps are useful for understanding why Nav2 accepts or rejects candidate
@@ -126,8 +134,13 @@ motion. The frontier selector itself consumes `/map`, not the Nav2 costmaps, so
 inspect the split map layers, `/frontier_markers`, and `/frontier_goal` when
 debugging frontier selection.
 
+Use the top-down layout for precise costmap/path inspection. Use the 3D layout
+when judging the D-LIO point-cloud map geometry against the projected 2D
+navigation overlays.
+
 ## Bandwidth Notes
 
-Start with `/map`, costmaps, TF, `/frontier_goal`, `/frontier_markers`, and the
-D-LIO map cloud. Keep `/points_raw` disabled unless you need raw LiDAR detail;
-it is the topic most likely to saturate Wi-Fi or make RViz lag.
+Start with the split map layers, costmaps, TF, `/frontier_goal`,
+`/frontier_markers`, and the D-LIO map cloud. Keep `/points_raw` disabled
+unless you need raw LiDAR detail; it is the topic most likely to saturate Wi-Fi
+or make RViz lag.
