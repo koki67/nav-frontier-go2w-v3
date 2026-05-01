@@ -6,6 +6,7 @@
   },
   "workspaceFolder": "/workspaces/nav-frontier-go2w-v3",
   "remoteUser": "root",
+  "postCreateCommand": "printf '\\n[nav-frontier-go2w] Desktop RViz devcontainer setup finished.\\n\\n'",
   "runArgs": [
     "--net=host",
     "--ipc=host",
