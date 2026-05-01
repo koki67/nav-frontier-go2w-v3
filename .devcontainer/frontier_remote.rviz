@@ -53,8 +53,8 @@ Visualization Manager:
       Marker Alpha: 0.8
       Marker Scale: 0.8
       Name: TF
-      Show Arrows: true
-      Show Axes: true
+      Show Arrows: false
+      Show Axes: false
       Show Names: false
       Tree:
         {}
