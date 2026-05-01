@@ -180,7 +180,7 @@ Visualization Manager:
               Value: false
             Value: false
           Enabled: true
-          Keep: 100
+          Keep: 1
           Name: D-LIO Odometry
           Position Tolerance: 0.1
           Shape:
