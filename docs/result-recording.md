@@ -76,6 +76,8 @@ In a second devcontainer terminal, play the bag:
 
 `start_replay_rviz.bash` starts RViz with `use_sim_time=true`, and
 `play_frontier_bag.bash` publishes `/clock` with `ros2 bag play --clock`.
-The preconfigured RViz layout already includes `/map`, costmaps,
-`/frontier_goal`, `/frontier_markers`, D-LIO odometry/path, MPPI trajectories,
-and `/cmd_vel`.
+The RViz helper also runs `map_viz_layers` locally, deriving
+`/map_known_cells` and `/map_unknown_cells` from the recorded `/map` so older
+bags can use the split map display. The preconfigured RViz layout includes
+those split map layers, costmaps, `/frontier_goal`, `/frontier_markers`, D-LIO
+odometry/path, MPPI trajectories, and `/cmd_vel`.

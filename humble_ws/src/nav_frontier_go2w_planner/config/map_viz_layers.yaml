@@ -1,0 +1,22 @@
+map_viz_layers:
+  ros__parameters:
+    input_topic: /map
+    known_topic: /map_known_cells
+    unknown_topic: /map_unknown_cells
+
+    # OccupancyGrid cells with values >= this threshold are drawn as occupied.
+    occupied_threshold: 50
+
+    # Increase to 2+ if large maps make RViz sluggish. A stride of 1 draws every
+    # map cell.
+    cell_stride: 1
+    cell_z: -0.02
+    cell_thickness: 0.01
+
+    # Known cells are one topic with two marker namespaces: known_free and
+    # known_occupied. Unknown cells are a separate topic so their alpha can be
+    # tuned without washing out walls, costmaps, or paths.
+    publish_free_cells: true
+    known_free_rgba: [0.92, 0.92, 0.92, 0.10]
+    known_occupied_rgba: [0.02, 0.02, 0.02, 0.95]
+    unknown_rgba: [0.45, 0.45, 0.45, 0.18]

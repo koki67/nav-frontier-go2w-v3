@@ -99,7 +99,8 @@ Core frontier-navigation workflow:
 | RViz display | Topic |
 |--------------|-------|
 | TF | `/tf`, `/tf_static` |
-| Map | `/map` |
+| MarkerArray | `/map_unknown_cells` |
+| MarkerArray | `/map_known_cells` |
 | Map | `/global_costmap/costmap` |
 | Map | `/local_costmap/costmap` |
 | Pose | `/frontier_goal` |
@@ -117,10 +118,13 @@ Sensor and controller diagnostics:
 | MarkerArray | `/trajectories` | MPPI sampled trajectory visualization when available. |
 | Path | `/transformed_global_plan` | MPPI/controller path visualization when available. |
 
+The saved RViz layout keeps the raw `/map` display available but disabled.
+Instead, `map_viz_layers` derives `/map_known_cells` and `/map_unknown_cells`
+from `/map` so the unknown-space square can have its own color and alpha.
 Costmaps are useful for understanding why Nav2 accepts or rejects candidate
 motion. The frontier selector itself consumes `/map`, not the Nav2 costmaps, so
-inspect `/map`, `/frontier_markers`, and `/frontier_goal` when debugging
-frontier selection.
+inspect the split map layers, `/frontier_markers`, and `/frontier_goal` when
+debugging frontier selection.
 
 ## Bandwidth Notes
 

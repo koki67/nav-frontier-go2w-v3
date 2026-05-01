@@ -67,3 +67,6 @@ In a second terminal, play the bag with the matching replay environment:
 
 `start_replay_rviz.bash` sets RViz `use_sim_time=true`, and
 `play_frontier_bag.bash` publishes `/clock` with `ros2 bag play --clock`.
+The RViz helper also derives `/map_known_cells` and `/map_unknown_cells` from
+the replayed `/map` so the raw map's unknown-space square can be styled
+separately from the known map cells.
