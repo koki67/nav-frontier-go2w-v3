@@ -13,6 +13,8 @@
 | `/dlio/map_node/map`           | `sensor_msgs/PointCloud2`         | pub       | `dlio_map_node`                   | Renamed from `map` so it doesn't clash with slam_toolbox. |
 | `/scan`                        | `sensor_msgs/LaserScan`           | pub       | `pointcloud_to_laserscan`         | 2D projection of `/points_raw`. |
 | `/map`                         | `nav_msgs/OccupancyGrid`          | pub       | `slam_toolbox`                    | TRANSIENT_LOCAL durability. |
+| `/map_known_cells`             | `visualization_msgs/MarkerArray`  | pub       | `map_viz_layers`                 | RViz-only split of `/map` known free/occupied cells. |
+| `/map_unknown_cells`           | `visualization_msgs/MarkerArray`  | pub       | `map_viz_layers`                 | RViz-only split of `/map` unknown cells with independent alpha. |
 | `/frontier_goal`               | `geometry_msgs/PoseStamped`       | pub       | `frontier_selector`               | One pose per timer tick. Frame: `map`. |
 | `/frontier_markers`            | `visualization_msgs/MarkerArray`  | pub       | `frontier_selector`               | RViz overlays. |
 | `/global_costmap/costmap`      | `nav_msgs/OccupancyGrid`          | pub       | `planner_server`                  | Global planning costmap for RViz Map display. |

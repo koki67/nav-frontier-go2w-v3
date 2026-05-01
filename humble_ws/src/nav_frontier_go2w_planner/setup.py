@@ -24,6 +24,7 @@ setup(
     entry_points={
         "console_scripts": [
             "frontier_goal_executor = nav_frontier_go2w_planner.frontier_goal_executor:main",
+            "map_viz_layers = nav_frontier_go2w_planner.map_viz_layers:main",
         ],
     },
 )

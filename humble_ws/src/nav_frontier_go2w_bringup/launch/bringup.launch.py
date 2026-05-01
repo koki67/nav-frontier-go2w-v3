@@ -104,6 +104,7 @@ def generate_launch_description():
     wz_max = LaunchConfiguration("wz_max")
     score_lambda = LaunchConfiguration("score_lambda")
     info_radius_cells = LaunchConfiguration("info_radius_cells")
+    enable_map_viz_layers = LaunchConfiguration("enable_map_viz_layers")
 
     declared_args = [
         DeclareLaunchArgument("use_sim_time", default_value="false",
@@ -119,6 +120,8 @@ def generate_launch_description():
                               description="Frontier scoring lambda: score = info_gain - lambda * travel_cost(m)."),
         DeclareLaunchArgument("info_radius_cells", default_value="2",
                               description="Cell-radius expansion used when counting frontier information gain."),
+        DeclareLaunchArgument("enable_map_viz_layers", default_value="true",
+                              description="Publish RViz marker layers split from /map known/unknown cells."),
         DeclareLaunchArgument("record_results", default_value="false",
                               description="Record the frontier navigation result topics to a rosbag."),
         DeclareLaunchArgument("record_bag_dir", default_value="/external/bags",
@@ -206,7 +209,10 @@ def generate_launch_description():
             FindPackageShare("nav_frontier_go2w_planner"),
             "launch", "frontier_planner.launch.py",
         ])),
-        launch_arguments={"use_sim_time": use_sim_time}.items(),
+        launch_arguments={
+            "use_sim_time": use_sim_time,
+            "enable_map_viz_layers": enable_map_viz_layers,
+        }.items(),
     )
 
     # ---- 9. Velocity bridge ----------------------------------------------
