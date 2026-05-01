@@ -20,6 +20,7 @@ def generate_launch_description():
     pkg_share = get_package_share_directory("nav_frontier_go2w_planner")
     nav2_default_params = os.path.join(pkg_share, "config", "nav2_params.yaml")
     executor_config = os.path.join(pkg_share, "config", "frontier_goal_executor.yaml")
+    trajectory_lines_config = os.path.join(pkg_share, "config", "mppi_trajectory_lines.yaml")
 
     use_sim_time = LaunchConfiguration("use_sim_time")
     nav2_params_file = LaunchConfiguration("nav2_params_file")
@@ -45,5 +46,12 @@ def generate_launch_description():
             name="frontier_goal_executor",
             output="screen",
             parameters=[executor_config, {"use_sim_time": use_sim_time}],
+        ),
+        Node(
+            package="nav_frontier_go2w_planner",
+            executable="mppi_trajectory_lines",
+            name="mppi_trajectory_lines",
+            output="screen",
+            parameters=[trajectory_lines_config, {"use_sim_time": use_sim_time}],
         ),
     ])

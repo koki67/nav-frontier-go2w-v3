@@ -44,7 +44,7 @@ Default result topics:
 | D-LIO map and trajectory | `/dlio/map_node/map`, `/dlio/odom_node/odom`, `/dlio/odom_node/pose`, `/dlio/odom_node/path`, `/dlio/odom_node/keyframes` |
 | Frontier selection | `/frontier_goal`, `/frontier_markers` |
 | Nav2 costmaps | `/global_costmap/costmap`, `/global_costmap/costmap_raw`, `/local_costmap/costmap`, `/local_costmap/costmap_raw` |
-| Planner/controller visualization | `/plan`, `/global_plan`, `/local_plan`, `/received_global_plan`, `/transformed_global_plan`, `/trajectories`, `/optimal_trajectory` |
+| Planner/controller visualization | `/plan`, `/global_plan`, `/local_plan`, `/received_global_plan`, `/transformed_global_plan`, `/trajectories`, `/mppi_trajectory_lines`, `/optimal_trajectory` |
 | Nav2 actions | `/navigate_to_pose/_action/*`, `/compute_path_to_pose/_action/*`, `/follow_path/_action/*`, `/smooth_path/_action/*` |
 | Motion commands | `/cmd_vel_nav`, `/cmd_vel`, `/api/sport/request`, `/api/sport/response` |
 | Lightweight sensor context | `/scan` |

@@ -279,12 +279,25 @@ Visualization Manager:
             Durability Policy: Volatile
             History Policy: Keep Last
             Reliability Policy: Reliable
-            Value: /trajectories
-          Name: MPPI Trajectories
+            Value: /mppi_trajectory_lines
+          Name: MPPI Sampled Trajectory Lines
           Namespaces:
             {}
           Queue Size: 100
           Value: true
+        - Class: rviz_default_plugins/MarkerArray
+          Enabled: false
+          Marker Topic:
+            Depth: 5
+            Durability Policy: Volatile
+            History Policy: Keep Last
+            Reliability Policy: Reliable
+            Value: /trajectories
+          Name: MPPI Raw Trajectories
+          Namespaces:
+            {}
+          Queue Size: 100
+          Value: false
       Enabled: true
       Name: Navigation
     - Class: rviz_common/Group
