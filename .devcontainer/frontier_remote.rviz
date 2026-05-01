@@ -53,8 +53,8 @@ Visualization Manager:
       Marker Alpha: 0.8
       Marker Scale: 0.8
       Name: TF
-      Show Arrows: true
-      Show Axes: true
+      Show Arrows: false
+      Show Axes: false
       Show Names: false
       Tree:
         {}
@@ -180,7 +180,7 @@ Visualization Manager:
               Value: false
             Value: false
           Enabled: true
-          Keep: 100
+          Keep: 1
           Name: D-LIO Odometry
           Position Tolerance: 0.1
           Shape:
@@ -342,11 +342,11 @@ Visualization Manager:
           Class: rviz_default_plugins/PointCloud2
           Color Transformer: AxisColor
           Decay Time: 0
-          Enabled: false
+          Enabled: true
           Name: D-LIO Map Cloud
           Position Transformer: XYZ
           Selectable: true
-          Size (Pixels): 2
+          Size (Pixels): 4
           Size (m): 0.03
           Style: Points
           Topic:
@@ -356,7 +356,7 @@ Visualization Manager:
             Reliability Policy: Reliable
             Value: /dlio/map_node/map
           Use Fixed Frame: true
-          Value: false
+          Value: true
       Enabled: true
       Name: Sensors
   Enabled: true
