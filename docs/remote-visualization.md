@@ -114,7 +114,8 @@ Sensor and controller diagnostics:
 | LaserScan | `/scan` | Lighter than the full point cloud. |
 | PointCloud2 | `/points_raw` | Useful but bandwidth-heavy over Wi-Fi. |
 | PointCloud2 | `/dlio/map_node/map` | D-LIO map cloud; bandwidth-heavy. |
-| MarkerArray | `/trajectories` | MPPI sampled trajectory visualization when available. |
+| MarkerArray | `/mppi_trajectory_lines` | Thin-line visualization of MPPI sampled trajectories. |
+| MarkerArray | `/trajectories` | Raw MPPI sampled trajectory markers, disabled by default in RViz. |
 | Path | `/transformed_global_plan` | MPPI/controller path visualization when available. |
 
 Costmaps are useful for understanding why Nav2 accepts or rejects candidate
@@ -124,6 +125,6 @@ frontier selection.
 
 ## Bandwidth Notes
 
-Start with `/map`, costmaps, TF, `/frontier_goal`, and `/frontier_markers`.
-Enable `/points_raw` and `/dlio/map_node/map` only when you need point-cloud
-detail; they are the most likely topics to saturate Wi-Fi or make RViz lag.
+Start with `/map`, costmaps, TF, `/frontier_goal`, `/frontier_markers`, and the
+D-LIO map cloud. Keep `/points_raw` disabled unless you need raw LiDAR detail;
+it is the topic most likely to saturate Wi-Fi or make RViz lag.

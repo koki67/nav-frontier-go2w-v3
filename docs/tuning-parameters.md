@@ -20,6 +20,7 @@ wrong.
 | 2D mapping | `humble_ws/src/go2w_slam_toolbox_bringup/config/slam_toolbox.yaml` |
 | Frontier selector | `humble_ws/src/nav_frontier_go2w_frontier/config/frontier_selector.yaml` |
 | Frontier goal executor | `humble_ws/src/nav_frontier_go2w_planner/config/frontier_goal_executor.yaml` |
+| MPPI trajectory line visualization | `humble_ws/src/nav_frontier_go2w_planner/config/mppi_trajectory_lines.yaml` |
 | Nav2 global/local planning and costmaps | `humble_ws/src/nav_frontier_go2w_planner/config/nav2_params.yaml` |
 | Velocity bridge | `humble_ws/src/nav_frontier_go2w_bridge/config/velocity_bridge.yaml` |
 
@@ -306,6 +307,24 @@ or increase `info_radius_cells`. If it chases noisy map speckles, increase
 
 If Nav2 thrashes between nearby frontiers, increase `min_goal_update_distance`.
 If it waits too long on impossible goals, reduce `goal_timeout_sec`.
+
+## MPPI Trajectory Line Visualization
+
+This helper is visual-only. It subscribes to Nav2 MPPI's raw `/trajectories`
+MarkerArray and republishes normalized thin line markers on
+`/mppi_trajectory_lines` for RViz and rosbag replay.
+
+| Parameter | Current Value | Effect |
+|-----------|---------------|--------|
+| `input_topic` | `/trajectories` | Raw MPPI trajectory MarkerArray. |
+| `output_topic` | `/mppi_trajectory_lines` | Normalized line MarkerArray for RViz. |
+| `line_width` | `0.015` | Width of sampled trajectory lines. |
+| `alpha` | `0.35` | Line transparency. |
+| `color_rgb` | `[80.0, 180.0, 255.0]` | Default RGB line color. Values above 1.0 are treated as 0-255. |
+| `z_offset` | `0.04` | Small vertical offset to keep lines visible over maps/costmaps. |
+| `max_markers` | `400` | Maximum trajectories converted per message; `0` means unlimited. |
+| `point_stride` | `1` | Uses every Nth point from each incoming marker. |
+| `preserve_marker_color` | `false` | Uses MPPI marker colors instead of the configured color when true. |
 
 ## Global Planner
 

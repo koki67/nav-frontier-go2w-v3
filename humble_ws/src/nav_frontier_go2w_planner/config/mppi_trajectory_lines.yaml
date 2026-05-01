@@ -1,0 +1,11 @@
+mppi_trajectory_lines:
+  ros__parameters:
+    input_topic: /trajectories
+    output_topic: /mppi_trajectory_lines
+    line_width: 0.015
+    alpha: 0.35
+    color_rgb: [80.0, 180.0, 255.0]
+    z_offset: 0.04
+    max_markers: 400
+    point_stride: 1
+    preserve_marker_color: false

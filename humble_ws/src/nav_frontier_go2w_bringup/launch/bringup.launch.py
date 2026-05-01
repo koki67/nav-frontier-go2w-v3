@@ -49,6 +49,7 @@ RESULT_RECORDING_REGEX = (
     r"/global_costmap/(costmap|costmap_raw|costmap_updates|published_footprint)|"
     r"/local_costmap/(costmap|costmap_raw|costmap_updates|published_footprint)|"
     r"/(plan|global_plan|local_plan|received_global_plan|transformed_global_plan|trajectories|trajectory|optimal_trajectory)|"
+    r"/mppi_trajectory_lines|"
     r"/cmd_vel_nav|/cmd_vel|"
     r"/api/sport/(request|response)|"
     r"/navigate_to_pose/_action/(goal|feedback|status|result|cancel)|"
