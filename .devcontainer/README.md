@@ -42,10 +42,18 @@ opens RViz with the preconfigured frontier-navigation layout:
 .devcontainer/start_remote_rviz.bash
 ```
 
+Use the 3D layout when inspecting the D-LIO map cloud with the 2D map, costmap,
+frontier, and path overlays still projected on the ground plane:
+
+```bash
+.devcontainer/start_remote_rviz_3d.bash
+```
+
 Pass a different interface only if the desktop robot-network NIC changes:
 
 ```bash
 .devcontainer/start_remote_rviz.bash wlp2s0
+.devcontainer/start_remote_rviz_3d.bash wlp2s0
 ```
 
 ## Local Rosbag Replay
@@ -57,6 +65,12 @@ Open RViz first so replay starts from the beginning:
 
 ```bash
 .devcontainer/start_replay_rviz.bash
+```
+
+For 3D replay of the D-LIO map cloud plus ground-plane overlays, use:
+
+```bash
+.devcontainer/start_replay_rviz_3d.bash
 ```
 
 In a second terminal, play the bag with the matching replay environment:
